@@ -28,6 +28,9 @@ public class MapGenerator : MonoBehaviour {
     public float meshHeightMultiplier;
     public float meshHeightOffset;
 
+    public float wellDepthCutoff = 0.1f;
+	public float wellDepth = 50f;
+
 	void Start ()
 	{
 //		col = GetComponent<EdgeCollider2D>();
@@ -42,12 +45,16 @@ public class MapGenerator : MonoBehaviour {
 		float leftX = (noiseMap.Length - 1) / -2f;
 
 		for (int i=0; i<noiseMap.Length; i++){
-			newVerticies.Add( new Vector2(i + leftX, noiseMap[i] * meshHeightMultiplier + meshHeightOffset) );
+			float currentWellDepth = wellDepth;
+			if (noiseMap [i] > wellDepthCutoff) {
+				currentWellDepth = 0;
+			}
+			newVerticies.Add( new Vector2(i + leftX, noiseMap[i] * meshHeightMultiplier + meshHeightOffset - currentWellDepth) );
 		}
 
 		col.points = newVerticies.ToArray();
 
-		DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightOffset));
+		DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightOffset, wellDepthCutoff, wellDepth));
 	}
 
 	public void DrawMesh(MeshData meshData){

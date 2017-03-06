@@ -3,7 +3,7 @@ using System.Collections;
 
 public static class MeshGenerator {
 
-	public static MeshData GenerateTerrainMesh (float[] heightMap, float heightMultiplier, float meshHeightOffset)
+	public static MeshData GenerateTerrainMesh (float[] heightMap, float heightMultiplier, float meshHeightOffset, float wellDepthCutoff, float wellDepth)
 	{
 		int width = heightMap.GetLength (0);
 		//  height = 2 -> 2 rows of vertices
@@ -29,8 +29,14 @@ public static class MeshGenerator {
 //				} else if (y == 1) {
 //					platformDepth = -3;
 //				}
+
+				// set the wells
+				float currentWellDepth = wellDepth;
+				if (heightMap [x] > wellDepthCutoff) {
+					currentWellDepth = 0;
+				}
 				
-				meshData.vertices [vertexIndex] = new Vector3 (leftX + x, heightMap [x] * heightMultiplier * platformDepth + (y * meshHeightOffset), 0);
+				meshData.vertices [vertexIndex] = new Vector3 (leftX + x, heightMap [x] * heightMultiplier * platformDepth + (y * meshHeightOffset) - currentWellDepth, 0);
 				meshData.uvs [vertexIndex] = new Vector2 (x / (float)width, 1f);
 
 				if (x < width - 1 && y < height - 1 ) {
