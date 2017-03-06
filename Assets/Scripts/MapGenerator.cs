@@ -25,6 +25,8 @@ public class MapGenerator : MonoBehaviour {
     // for the mesh
     public MeshFilter meshFilter;
     public MeshRenderer meshRenderer;
+    public float meshHeightMultiplier;
+    public float meshHeightOffset;
 
 	void Start ()
 	{
@@ -36,17 +38,22 @@ public class MapGenerator : MonoBehaviour {
 		newVerticies = new List<Vector2>();
 		col = GetComponent<EdgeCollider2D>();
 		float[] noiseMap = Noise.GenerateNoise(mapWidth, seed, noiseScale, octaves, persistance, lacunarity, offset);
+
+		float leftX = (noiseMap.Length - 1) / -2f;
+
 		for (int i=0; i<noiseMap.Length; i++){
-			newVerticies.Add( new Vector2(i, noiseMap[i]) );
+			newVerticies.Add( new Vector2(i + leftX, noiseMap[i] * meshHeightMultiplier + meshHeightOffset) );
 		}
 
 		col.points = newVerticies.ToArray();
 
-		DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap));
+		DrawMesh(MeshGenerator.GenerateTerrainMesh(noiseMap, meshHeightMultiplier, meshHeightOffset));
 	}
 
 	public void DrawMesh(MeshData meshData){
 
+		Mesh mesh = meshFilter.sharedMesh;
+		mesh.Clear();
 		meshFilter.sharedMesh = meshData.CreateMesh();
 		
 	}
