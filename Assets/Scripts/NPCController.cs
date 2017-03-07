@@ -4,6 +4,8 @@ using System.Collections;
 public class NPCController : MonoBehaviour {
 
 	public float maxSpeed = 10f;
+	public float idleSpeed = 3.0f;
+	public int idleDirection = 1;
 
 	private bool facingRight = true;
 	private Animator anim;
@@ -16,6 +18,8 @@ public class NPCController : MonoBehaviour {
 //	public LayerMask whatIsClimbable;
 //	public float releaseForce = 100;
 
+	public bool stop = false;
+
 	private bool grounded = false;
 	public Transform groundCheck;
 	private float groundRadius = 0.2f;
@@ -27,12 +31,29 @@ public class NPCController : MonoBehaviour {
 	public Vector3 target;
 	public bool goToTarget = false;
 
+	// check for drops
+	private float dropRadius = 1.5f;
+
+	public int state = 0;// give states numbers 0 = idle
+
 	// Use this for initialization
-	void Start () {
-		rBody = GetComponent<Rigidbody2D>();
+	void Start ()
+	{
+		rBody = GetComponent<Rigidbody2D> ();
 //		anim = GetComponent<Animator>();
 
-		hitRadius += Random.Range(0.0f, 1.0f);
+		// vary stopping distance slightly
+		hitRadius += Random.Range (0.0f, 1.0f);
+		// vary maxSpeed slightly
+		maxSpeed += Random.Range (-1.5f, 1.5f);
+		idleSpeed += Random.Range (-1.5f, 1.5f);
+
+		// randomise idle direction
+		if (Random.Range (0, 1f) > 0.5) {
+			idleDirection = 1;
+		} else {
+			idleDirection = -1;
+		}
 	}
 	
 	// Update is called once per frame
@@ -59,21 +80,45 @@ public class NPCController : MonoBehaviour {
 //			rBody.velocity  =new Vector2(move * maxSpeed,rBody.velocity.y);
 //		}
 
-		if (goToTarget) {
+		if (state == 0) {
+			Idle();
+		}
+
+		if (goToTarget && !stop) {
 			if (transform.position.x < target.x) {
 				rBody.velocity = new Vector2 (1 * maxSpeed, rBody.velocity.y);
 			} else if (transform.position.x > target.x) {
 				rBody.velocity = new Vector2 (-1 * maxSpeed, rBody.velocity.y);
 			}
 		} else {
-			rBody.velocity = new Vector2 (0 * maxSpeed, rBody.velocity.y);
+//			Idle();
+//			rBody.velocity = new Vector2 (idleDirection * idleSpeed, rBody.velocity.y);
 		}
 
 
-//		if (move > 0 && !facingRight)
-//			Flip();
-//		else if (move < 0 && facingRight)
-//			Flip();
+		if (rBody.velocity.x > 0 && !facingRight) {
+			Flip ();
+		} else if (rBody.velocity.x < 0 && facingRight) {
+			Flip ();
+		}
+	}
+
+	void Idle(){
+		rBody.velocity = new Vector2 (idleDirection * idleSpeed, rBody.velocity.y);
+	}
+
+	public void StopNPC ()
+	{
+		stop = true;
+		// if idling then reverse direction
+		if (state == 0) {
+			idleDirection = -idleDirection;
+//			stop = false;
+		}
+		Debug.Log("STOOPOPOPOPOPOPOPOPO");
+	}
+	public void UnStopNPC(){
+		stop = false;
 	}
 
 	// put inputs here because if we use Fixedupdate, we may miss an input
@@ -101,6 +146,8 @@ public class NPCController : MonoBehaviour {
 			Debug.Log("Hit target? " + (transform.position.x < (target.x + hitRadius) && transform.position.x > (target.x - hitRadius)));
 			if (transform.position.x < (target.x + hitRadius) && transform.position.x > (target.x - hitRadius)) {
 				goToTarget = false;
+				// return to idle state
+				state = 0;
 //				target = null;
 			}
 		}
@@ -117,8 +164,9 @@ public class NPCController : MonoBehaviour {
 	public void GoToLocation(Vector3 position){
 		Debug.Log("Go to this position: " + position);
 		target = position;
+		stop = false;
 		goToTarget = true;
-
+		state = 1;
 	}
 
 }

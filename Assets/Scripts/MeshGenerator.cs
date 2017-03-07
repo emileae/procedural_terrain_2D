@@ -32,9 +32,9 @@ public static class MeshGenerator {
 
 				// set the wells
 				float currentWellDepth = wellDepth;
-				if (heightMap [x] > wellDepthCutoff) {
-					currentWellDepth = 0;
-				}
+//				if (heightMap [x] > wellDepthCutoff) {
+//					currentWellDepth = 0;
+//				}
 				
 				meshData.vertices [vertexIndex] = new Vector3 (leftX + x, heightMap [x] * heightMultiplier * platformDepth + (y * meshHeightOffset) - currentWellDepth, 0);
 				meshData.uvs [vertexIndex] = new Vector2 (x / (float)width, 1f);
