@@ -27,7 +27,7 @@ public class Fish : MonoBehaviour {
 		fishTarget = GameObject.Find("FishTarget");
 		controller = GameObject.Find("FishController").GetComponent<FishController>();
 		childModel = this.gameObject.transform.GetChild(0);
-		speed += Random.Range (-0.3f, 0.3f);
+//		speed += Random.Range (-0.3f, 0.3f);
 		direction = (new Vector2(transform.position.x, transform.position.y) - Vector2.zero);
 		if (Random.Range (0f, 1f) > 0.5) {
 			direction *= -1;

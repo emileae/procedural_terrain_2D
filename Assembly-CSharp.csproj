@@ -48,7 +48,7 @@
      <Compile Include="Assets\Scripts\Blackboard.cs" />
      <Compile Include="Assets\Scripts\Fish\Fish.cs" />
      <Compile Include="Assets\Scripts\Fish\FishController.cs" />
-     <Compile Include="Assets\Scripts\Fish\Flocking\flock.cs" />
+     <Compile Include="Assets\Scripts\Fish\Flocking\flockk.cs" />
      <Compile Include="Assets\Scripts\Fish\Flocking\globalFlock.cs" />
      <Compile Include="Assets\Scripts\MapGenerator.cs" />
      <Compile Include="Assets\Scripts\MeshGenerator.cs" />
@@ -57,6 +57,16 @@
      <Compile Include="Assets\Scripts\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Sea.cs" />
      <Compile Include="Assets\Scripts\ShoreLine.cs" />
+     <Compile Include="Assets\Steer2D\Examples\Assets\Target.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\Arrive.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\Evade.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\Flee.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\Flock.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\FollowPath.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\Pursue.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\Seek.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\SteeringAgent.cs" />
+     <Compile Include="Assets\Steer2D\Scripts\SteeringBehaviour.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
