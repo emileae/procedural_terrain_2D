@@ -21,7 +21,7 @@ public class ShoreLine : MonoBehaviour {
 		if (go.layer == 9) {
 			Debug.Log("TRIGGERERERERERERER");
 			NPCController npcScript = go.GetComponent<NPCController>();
-			npcScript.StopNPC();
+			npcScript.ReachedShoreLine();
 		}
 	}
 

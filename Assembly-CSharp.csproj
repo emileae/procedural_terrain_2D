@@ -46,6 +46,10 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Blackboard.cs" />
+     <Compile Include="Assets\Scripts\Fish\Fish.cs" />
+     <Compile Include="Assets\Scripts\Fish\FishController.cs" />
+     <Compile Include="Assets\Scripts\Fish\Flocking\flock.cs" />
+     <Compile Include="Assets\Scripts\Fish\Flocking\globalFlock.cs" />
      <Compile Include="Assets\Scripts\MapGenerator.cs" />
      <Compile Include="Assets\Scripts\MeshGenerator.cs" />
      <Compile Include="Assets\Scripts\NPCController.cs" />

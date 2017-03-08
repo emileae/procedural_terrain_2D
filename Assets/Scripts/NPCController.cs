@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class NPCController : MonoBehaviour {
 
+	public float speed;
+	public int direction = 1;
 	public float maxSpeed = 10f;
 	public float idleSpeed = 3.0f;
 	public int idleDirection = 1;
@@ -81,19 +84,25 @@ public class NPCController : MonoBehaviour {
 //		}
 
 		if (state == 0) {
-			Idle();
+			Idle ();
 		}
 
 		if (goToTarget && !stop) {
 			if (transform.position.x < target.x) {
-				rBody.velocity = new Vector2 (1 * maxSpeed, rBody.velocity.y);
+				direction = 1;
 			} else if (transform.position.x > target.x) {
-				rBody.velocity = new Vector2 (-1 * maxSpeed, rBody.velocity.y);
+				direction = -1;
 			}
+			speed = maxSpeed;
 		} else {
-//			Idle();
-//			rBody.velocity = new Vector2 (idleDirection * idleSpeed, rBody.velocity.y);
+			if (stop) {
+				direction = 0;
+			} else {
+				Idle();
+			}
 		}
+
+		rBody.velocity = new Vector2 (direction * speed, rBody.velocity.y);
 
 
 		if (rBody.velocity.x > 0 && !facingRight) {
@@ -104,18 +113,21 @@ public class NPCController : MonoBehaviour {
 	}
 
 	void Idle(){
-		rBody.velocity = new Vector2 (idleDirection * idleSpeed, rBody.velocity.y);
+		direction = idleDirection;
+		speed = idleSpeed;
 	}
 
-	public void StopNPC ()
+	public void ReachedShoreLine ()
 	{
+		Debug.Log("Reached shoreline");
 		stop = true;
 		// if idling then reverse direction
 		if (state == 0) {
+			Debug.Log("In idle state - a: " + idleDirection);
 			idleDirection = -idleDirection;
-//			stop = false;
+			Debug.Log("In idle state - b: " + idleDirection);
+			stop = false;
 		}
-		Debug.Log("STOOPOPOPOPOPOPOPOPO");
 	}
 	public void UnStopNPC(){
 		stop = false;
