@@ -384,7 +384,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 173835482}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -403,6 +403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ac012cfb16244ef8bf8eb8fe6a97dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
+  direction: 1
   maxSpeed: 10
   idleSpeed: 3
   idleDirection: 1
@@ -591,7 +593,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 455198477}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.7, y: -9.9, z: -10}
+  m_LocalPosition: {x: -8.7, y: -9.9, z: -72.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []
@@ -688,7 +690,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 19be63f54063542a6b7ac4c43d0ec024, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 66.9
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 19be63f54063542a6b7ac4c43d0ec024, type: 3}
       propertyPath: m_LocalRotation.x
@@ -862,7 +864,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 723087016}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -881,6 +883,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ac012cfb16244ef8bf8eb8fe6a97dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
+  direction: 1
   maxSpeed: 10
   idleSpeed: 3
   idleDirection: 1
@@ -1159,7 +1163,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 844321654}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -1178,6 +1182,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ac012cfb16244ef8bf8eb8fe6a97dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
+  direction: 1
   maxSpeed: 10
   idleSpeed: 3
   idleDirection: 1
@@ -1587,7 +1593,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1344704162}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -1606,6 +1612,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ac012cfb16244ef8bf8eb8fe6a97dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
+  direction: 1
   maxSpeed: 10
   idleSpeed: 3
   idleDirection: 1
@@ -1673,7 +1681,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1345454847}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -1692,6 +1700,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ac012cfb16244ef8bf8eb8fe6a97dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
+  direction: 1
   maxSpeed: 10
   idleSpeed: 3
   idleDirection: 1
@@ -2002,7 +2012,7 @@ BoxCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1599904920}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -2021,6 +2031,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09ac012cfb16244ef8bf8eb8fe6a97dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
+  direction: 1
   maxSpeed: 10
   idleSpeed: 3
   idleDirection: 1
@@ -2034,6 +2046,101 @@ MonoBehaviour:
   target: {x: 0, y: 0, z: 0}
   goToTarget: 0
   state: 0
+--- !u!1 &1666453244
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1666453246}
+  - 114: {fileID: 1666453245}
+  m_Layer: 0
+  m_Name: FishController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1666453245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1666453244}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4917c17ea8faf47228341eaa149d3187, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fishPrefab: {fileID: 1000013227455792, guid: 588a8951d6b30417dac3b201930c0801, type: 2}
+  sea: {fileID: 593432921}
+  seaBounds:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  seaBuffer: 1
+  allFish:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+--- !u!4 &1666453246
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1666453244}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.3379216, y: -1.2758969, z: 11.10994}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 12
+--- !u!1 &1675032108
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1675032109}
+  m_Layer: 0
+  m_Name: FishTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1675032109
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1675032108}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -22.1, y: -32.9, z: -1}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 13
 --- !u!1 &1703356718
 GameObject:
   m_ObjectHideFlags: 0
@@ -2112,6 +2219,10 @@ Prefab:
     - target: {fileID: 400000, guid: 9f119805ec77f47089bd61a41664912d, type: 3}
       propertyPath: m_LocalScale.y
       value: 6.2124596
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 9f119805ec77f47089bd61a41664912d, type: 3}
+      propertyPath: m_Name
+      value: SeaVolume
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9f119805ec77f47089bd61a41664912d, type: 3}

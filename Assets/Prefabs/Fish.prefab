@@ -136,5 +136,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d05dd4b45df3143afb8fe8923a748d44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 1
+  speed: 5
   direction: {x: 1, y: 0}
+  controller: {fileID: 0}
+  fishTarget: {fileID: 0}
