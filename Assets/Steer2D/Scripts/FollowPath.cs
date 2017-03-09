@@ -58,6 +58,8 @@ namespace Steer2D
 
         Vector2 arrive(Vector2 targetPoint)
         {
+        	Debug.Log("Arrived at point along the path.....");
+
             float distance = Vector3.Distance(transform.position, (Vector3)targetPoint);
             Vector2 desiredVelocity = (targetPoint - (Vector2)transform.position).normalized;
 

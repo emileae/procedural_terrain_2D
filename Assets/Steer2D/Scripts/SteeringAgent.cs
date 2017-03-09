@@ -11,8 +11,9 @@ namespace Steer2D
         public bool RotateSprite = true;
 
         // emile
-        public GameObject container;
-		public Bounds containerBounds;
+        private Blackboard blackboard;
+		private Vector2 randomTargetInContainer;
+		public Arrive arriveScript;
 
         [HideInInspector]
         public Vector2 CurrentVelocity;
@@ -31,10 +32,14 @@ namespace Steer2D
             behaviours.Remove(behaviour);
         }
 
-        void Start()
-        {
-            AgentList.Add(this);
-			containerBounds = container.GetComponent<MeshRenderer>().bounds;
+        void Start ()
+		{
+			AgentList.Add (this);
+			// emile
+			if (blackboard == null) {
+				blackboard = GameObject.Find("Blackboard").GetComponent<Blackboard>();
+			}
+			arriveScript = GetComponent<Arrive>();
         }
 
         void Update ()
@@ -46,32 +51,46 @@ namespace Steer2D
 					acceleration += behaviour.GetVelocity () * behaviour.Weight;
 			}
 
-			Vector2 distFromBounds = new Vector2 (transform.position.x - containerBounds.max.x, transform.position.y - containerBounds.max.y);
+			// emile
 //			Debug.Log("magnitude... " + distFromBounds.magnitude);
-			if (distFromBounds.magnitude < 90) {
-				Debug.Log("Too close to bounds................ move away");
+			if (transform.position.y >= blackboard.seaBounds.max.y - blackboard.seaBuffer
+			    || transform.position.y <= blackboard.seaBounds.min.y + blackboard.seaBuffer
+			    || transform.position.x >= blackboard.seaBounds.max.x - blackboard.seaBuffer
+			    || transform.position.x <= blackboard.seaBounds.min.x + blackboard.seaBuffer) {
+				if (!arriveScript.enabled) {
+					arriveScript.enabled = true;
+				} 
+				arriveScript.TargetPoint = GetRandomContainerPoint ();
 			}
 
-            CurrentVelocity += acceleration / Mass;
+			CurrentVelocity += acceleration / Mass;
 
-            CurrentVelocity -= CurrentVelocity * Friction;
+			CurrentVelocity -= CurrentVelocity * Friction;
 
-            if (CurrentVelocity.magnitude > MaxVelocity)
-                CurrentVelocity = CurrentVelocity.normalized * MaxVelocity;
+			if (CurrentVelocity.magnitude > MaxVelocity)
+				CurrentVelocity = CurrentVelocity.normalized * MaxVelocity;
 
-            transform.position = transform.position + (Vector3)CurrentVelocity * Time.deltaTime;
+			transform.position = transform.position + (Vector3)CurrentVelocity * Time.deltaTime;
         
-            if (RotateSprite && CurrentVelocity.magnitude > 0.0001f)
-            {
-                float angle = Mathf.Atan2(CurrentVelocity.y, CurrentVelocity.x) * Mathf.Rad2Deg;
+			if (RotateSprite && CurrentVelocity.magnitude > 0.0001f) {
+				float angle = Mathf.Atan2 (CurrentVelocity.y, CurrentVelocity.x) * Mathf.Rad2Deg;
 
-                transform.eulerAngles = new Vector3(transform.eulerAngles.x, transform.eulerAngles.y, angle);
-            }
+				transform.eulerAngles = new Vector3 (transform.eulerAngles.x, transform.eulerAngles.y, angle);
+			}
+
         }
 
         void OnDestroy()
         {
             AgentList.Remove(this);
+        }
+
+        // emile
+        Vector2 GetRandomContainerPoint(){
+			//randomTargetInContainer
+			float randomX = Random.Range(blackboard.seaBounds.min.x + blackboard.seaBuffer, blackboard.seaBounds.max.x - blackboard.seaBuffer);
+			float randomY = Random.Range(blackboard.seaBounds.min.y + blackboard.seaBuffer, blackboard.seaBounds.max.y - blackboard.seaBuffer);
+			return new Vector2(randomX, randomY);
         }
     }
 }

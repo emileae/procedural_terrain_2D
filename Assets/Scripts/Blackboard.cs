@@ -4,17 +4,62 @@ using System.Collections.Generic;
 
 public class Blackboard : MonoBehaviour {
 
+	public MapGenerator mapGenerator;
+
+	public GameObject sea;
+	public Bounds seaBounds;
+	public float seaBuffer = 1.0f;
+
 	public List<GameObject> npcs = new List<GameObject>();
 	public List<NPCController> npcScripts = new List<NPCController>();
 
+	// Fish
+	public float fishZPos = -1;
+	public List<GameObject> fish = new List<GameObject>();
+	public List<FishManager> fishManagerScripts = new List<FishManager>();
+
+	// the hot spots
+	public List<GameObject> fishingSpots = new List<GameObject>();
+
 	// Use this for initialization
-	void Awake () {
-		GameObject npcContainer = GameObject.Find("NPCs");
-		foreach (Transform child in npcContainer.transform)
-		{
-			npcs.Add(child.gameObject);
-			npcScripts.Add(child.GetComponent<NPCController>());
+	void Awake ()
+	{
+		mapGenerator.GenerateMap();
+
+
+		// set up the sea Bounds
+		if (sea == null) {
+			sea = GameObject.Find("Sea");
+			seaBounds = sea.transform.GetChild(0).GetComponent<MeshRenderer>().bounds;
 		}
+
+		// set up lists
+		GameObject npcContainer = GameObject.Find ("NPCs");
+		foreach (Transform child in npcContainer.transform) {
+			npcs.Add (child.gameObject);
+			npcScripts.Add (child.GetComponent<NPCController> ());
+		}
+
+		GameObject fishContainer = GameObject.Find ("Fish");
+		foreach (Transform child in fishContainer.transform) {
+			fish.Add (child.gameObject);
+			fishManagerScripts.Add (child.GetComponent<FishManager> ());
+		}
+
+		// fishing spots added to list as they're added to the map
+//		GameObject[] fishingspots = GameObject.FindGameObjectsWithTag ("FishingSpot");
+//		for (int i = 0; i < fishingspots.Length; i++) {
+//			fishing.Add(fishingspots[i]);
+//		}
+
+		// after all fishing spots have been listed
+		/// TODO: make sure that all fish have also been loaded
+//		SetFishPath ();
+
+	}
+
+	public void AddGameObjectToList(GameObject go, List<GameObject> list){
+		list.Add(go);
 	}
 	
 	public void CallNPCs (Vector3 position)
@@ -23,4 +68,53 @@ public class Blackboard : MonoBehaviour {
 			npcScripts[i].GoToLocation(position);
 		}
 	}
+
+	public void AttractFish (Vector3 position, int numFish)
+	{
+		Vector3 inSeaPosition = new Vector3(position.x, seaBounds.max.y - (seaBuffer*2), fishZPos);
+		for (int i = 0; i < fishManagerScripts.Count; i++) {
+			fishManagerScripts[i].AttractTo(inSeaPosition);
+		}
+	}
+
+	public void AttractFishToVictim (Vector3 position)
+	{
+		Vector3 inSeaPosition = new Vector3(position.x, seaBounds.max.y - (seaBuffer*2), fishZPos);
+		for (int i = 0; i < fishManagerScripts.Count; i++) {
+			fishManagerScripts[i].victimInWater = true;
+			fishManagerScripts[i].AttractTo(inSeaPosition);
+		}
+	}
+
+	public void RemoveAttractFishToVictim(){
+		for (int i = 0; i < fishManagerScripts.Count; i++) {
+			fishManagerScripts[i].victimInWater = false;
+		}
+	}
+
+	public Vector2[] GetFollowPath ()
+	{
+		Debug.Log("Fishing.Count..... " + fishingSpots.Count);
+		Vector2[] path = new Vector2[fishingSpots.Count];
+		for (int i = 0; i < fishingSpots.Count; i++) {
+			// add a random depth to fish target, up to 25% of total sea depth
+			float randomDepth = Random.Range(0.0f, seaBounds.extents.y/2);
+			path[i] = new Vector2(fishingSpots[i].transform.position.x, seaBounds.max.y - (seaBuffer*2 + randomDepth));
+		}
+
+		return path;
+	}
+
+	public void SetFishPath ()
+	{
+		Vector2[] path = new Vector2[fishingSpots.Count];
+		for (int i = 0; i < fishingSpots.Count; i++) {
+			path[i] = new Vector2(fishingSpots[i].transform.position.x, seaBounds.max.y - (seaBuffer*2));
+		}
+
+		for (int i = 0; i < fishManagerScripts.Count; i++) {
+			fishManagerScripts[i].SetFollowPath(path);
+		}
+	}
+
 }

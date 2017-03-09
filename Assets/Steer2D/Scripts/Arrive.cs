@@ -10,17 +10,28 @@ namespace Steer2D
         public float StopRadius = 0.2f;
         public bool DrawGizmos = false;
 
-        public override Vector2 GetVelocity()
-        {
-            float distance = Vector3.Distance(transform.position, (Vector3)TargetPoint);
-            Vector2 desiredVelocity = (TargetPoint - (Vector2)transform.position).normalized;
+        public bool arrived = false;
+        public bool nearlyArrived = false;
 
-            if (distance < StopRadius)
-                desiredVelocity = Vector2.zero;
-            else if (distance < SlowRadius)
-                desiredVelocity = desiredVelocity * agent.MaxVelocity * ((distance - StopRadius) / (SlowRadius - StopRadius));
-            else
-                desiredVelocity = desiredVelocity * agent.MaxVelocity;
+        public override Vector2 GetVelocity ()
+		{
+			float distance = Vector3.Distance (transform.position, (Vector3)TargetPoint);
+			Vector2 desiredVelocity = (TargetPoint - (Vector2)transform.position).normalized;
+
+			if (distance < StopRadius) {
+				desiredVelocity = Vector2.zero;
+				Debug.Log("ARIVVED!!!!?!?!?!?!?");
+//				this.enabled = false;
+				arrived = true;
+			} else if (distance < SlowRadius) {
+				desiredVelocity = desiredVelocity * agent.MaxVelocity * ((distance - StopRadius) / (SlowRadius - StopRadius));
+//				this.enabled = false;
+				nearlyArrived = true;
+			} else {
+				desiredVelocity = desiredVelocity * agent.MaxVelocity;
+				arrived = false;
+				nearlyArrived = false;
+			}
 
             return desiredVelocity - agent.CurrentVelocity;
         }

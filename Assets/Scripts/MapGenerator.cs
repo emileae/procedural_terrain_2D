@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class MapGenerator : MonoBehaviour {
 
+	public Blackboard blackboard;
+
 	public int mapWidth;
 	public float noiseScale;
 
@@ -35,13 +37,17 @@ public class MapGenerator : MonoBehaviour {
 	public GameObject shoreLine;
 	public GameObject tree;
 	public GameObject well;
+	public GameObject fishing;
 
 	public GameObject instantiatedPoints;
 
 	void Start ()
 	{
-//		col = GetComponent<EdgeCollider2D>();
-		GenerateMap();
+		if (blackboard == null) {
+			blackboard = GameObject.Find("Blackboard").GetComponent<Blackboard>();
+		}
+		// moved this to the blackboard
+//		GenerateMap();
 
 	}
 
@@ -115,6 +121,11 @@ public class MapGenerator : MonoBehaviour {
 					GameObject wellPoint = Instantiate(well, new Vector3 (i + leftX, noiseMap [i] * meshHeightMultiplier + meshHeightOffset - currentWellDepth, 0), Quaternion.identity) as GameObject;
 					wellPoint.transform.parent = instantiatedPoints.transform;
 		            break;
+				case "fishing":
+					GameObject fishingPoint = Instantiate(fishing, new Vector3 (i + leftX, noiseMap [i] * meshHeightMultiplier + meshHeightOffset - currentWellDepth, 0), Quaternion.identity) as GameObject;
+					fishingPoint.transform.parent = instantiatedPoints.transform;
+					blackboard.AddGameObjectToList(fishingPoint, blackboard.fishingSpots);
+		            break;
 		        default:
 		            print ("Nothing.");
 		            break;
@@ -148,6 +159,7 @@ public class MapGenerator : MonoBehaviour {
 
 		// number of units to place
 		int NumWells = 5;
+		int NumFishingSpots = 2;
 		int numTrees = 12;
 
 		for (int i = 0; i < points.Length; i++) {
@@ -158,6 +170,9 @@ public class MapGenerator : MonoBehaviour {
 			} else if (numTrees > 0) {
 				points [i] = "tree";
 				numTrees -= 1;
+			}else if (NumFishingSpots > 0) {
+				points [i] = "fishing";
+				NumFishingSpots -= 1;
 			} else {
 				points [i] = "null";
 			}
