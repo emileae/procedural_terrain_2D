@@ -6,7 +6,6 @@ public class FishingSpot : MonoBehaviour {
 	public Blackboard blackboard;
 	public int numFishToAttract = 5;
 
-	// Use this for initialization
 	void Start ()
 	{
 		if (blackboard == null) {
@@ -16,8 +15,7 @@ public class FishingSpot : MonoBehaviour {
 		// might come in handy when player throws bait into the water
 //		AttractFish();
 	}
-	
-	// Update is called once per frame
+
 	void Update () {
 	
 	}
@@ -25,4 +23,5 @@ public class FishingSpot : MonoBehaviour {
 	void AttractFish(){
 		blackboard.AttractFish(transform.position, numFishToAttract);
 	}
+
 }

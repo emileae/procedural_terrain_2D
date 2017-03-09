@@ -119,13 +119,10 @@ public class NPCController : MonoBehaviour {
 
 	public void ReachedShoreLine ()
 	{
-		Debug.Log("Reached shoreline");
 		stop = true;
 		// if idling then reverse direction
 		if (state == 0) {
-			Debug.Log("In idle state - a: " + idleDirection);
 			idleDirection = -idleDirection;
-			Debug.Log("In idle state - b: " + idleDirection);
 			stop = false;
 		}
 	}
@@ -155,7 +152,6 @@ public class NPCController : MonoBehaviour {
 
 		// going to a target
 		if (goToTarget) {
-			Debug.Log("Hit target? " + (transform.position.x < (target.x + hitRadius) && transform.position.x > (target.x - hitRadius)));
 			if (transform.position.x < (target.x + hitRadius) && transform.position.x > (target.x - hitRadius)) {
 				goToTarget = false;
 				// return to idle state
@@ -174,7 +170,6 @@ public class NPCController : MonoBehaviour {
 	}
 
 	public void GoToLocation(Vector3 position){
-		Debug.Log("Go to this position: " + position);
 		target = position;
 		stop = false;
 		goToTarget = true;

@@ -21,6 +21,7 @@ GameObject:
   - 4: {fileID: 4000013634560538}
   - 61: {fileID: 61000010112298760}
   - 114: {fileID: 114000010608634424}
+  - 114: {fileID: 114000012140496168}
   m_Layer: 0
   m_Name: Fishing
   m_TagString: FishingSpot
@@ -68,3 +69,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   blackboard: {fileID: 0}
   numFishToAttract: 5
+--- !u!114 &114000012140496168
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000012952225952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 75961bef215d04ed7a66301fdcc72b74, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level: 0
+  maxLevel: 1
+  buildCost: 3
+  useCost: 1
