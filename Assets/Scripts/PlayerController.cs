@@ -29,6 +29,11 @@ public class PlayerController : MonoBehaviour {
 	public int currency = 100;
 	public GameObject payTarget = null;
 
+
+	// Boat
+	public bool onBoat = false;
+	private float boatXVelocity;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -62,11 +67,17 @@ public class PlayerController : MonoBehaviour {
 //			rBody.velocity = new Vector2 (move * maxSpeed, -rBody.velocity.y);
 //		} else {
 
-		rBody.velocity = new Vector2 (move * maxSpeed, rBody.velocity.y);
+		if (onBoat) {
+			rBody.velocity = new Vector2 (move * maxSpeed + boatXVelocity, rBody.velocity.y);
+		} else {
+			rBody.velocity = new Vector2 (move * maxSpeed, rBody.velocity.y);
+		}
+
+//		rBody.velocity = new Vector2 (move * maxSpeed, rBody.velocity.y);
 
 		// prevent sliding
 		if (move == 0) {
-			Debug.Log("Constrain the x position");
+			Debug.Log ("Constrain the x position");
 			rBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 //			rBody.constraints = RigidbodyConstraints2D.FreezeRotation;
 		} else {
@@ -142,5 +153,28 @@ public class PlayerController : MonoBehaviour {
 	public void ReturnPayment(int returnedCurrency){
 		currency += returnedCurrency;
 	}
+
+	public void KeepPlayerOnBoat(float xVelocity){
+		onBoat = true;
+		boatXVelocity = xVelocity;
+	}
+
+	public void FreezePlayerX(){
+		rBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
+	}
+
+	public void UnFreezePlayerX(){
+		rBody.constraints = RigidbodyConstraints2D.FreezeRotation;
+	}
+
+//	public void AddBoatVelocity(Vector2 velocity){
+//		onBoat = true;
+//		boatVelocity = velocity;
+//	}
+//
+//	public void OffBoat(){
+//		onBoat = false;
+//		boatVelocity = Vector2.zero;
+//	}
 
 }

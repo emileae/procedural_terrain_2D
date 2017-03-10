@@ -21,6 +21,9 @@ public class Blackboard : MonoBehaviour {
 	// the hot spots
 	public List<GameObject> fishingSpots = new List<GameObject>();
 
+	// Buildings
+	public List<GameObject> buildingList = new List<GameObject>();
+
 	// Use this for initialization
 	void Awake ()
 	{
@@ -114,6 +117,38 @@ public class Blackboard : MonoBehaviour {
 
 		for (int i = 0; i < fishManagerScripts.Count; i++) {
 			fishManagerScripts[i].SetFollowPath(path);
+		}
+	}
+
+	public void AddToBuildingList (GameObject building)
+	{
+		buildingList.Add(building);
+		Debug.Log("Call NPC to build");
+
+		CallNearestNPC(building);
+
+	}
+
+	public void CallNearestNPC (GameObject destination)
+	{
+		bool foundAvailableNPC = false;
+		float npcDistance = Mathf.Infinity;
+		int nearestNPCIndex = 0;
+		for (int i = 0; i < npcScripts.Count; i++) {
+			if (npcScripts [i].state == 0) {
+				Vector3 offset = destination.transform.position - npcs [i].transform.position;
+				float sqrMagDistance = offset.sqrMagnitude;
+				if (sqrMagDistance < npcDistance) {
+					npcDistance = sqrMagDistance;
+					nearestNPCIndex = 0;
+					foundAvailableNPC = true;
+				}
+			}
+		}
+
+		if (foundAvailableNPC) {
+			npcScripts[nearestNPCIndex].GoToLocation(destination.transform.position);
+			npcScripts[nearestNPCIndex].targetGameObject = destination;
 		}
 	}
 

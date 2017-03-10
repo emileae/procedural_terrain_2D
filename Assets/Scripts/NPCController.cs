@@ -37,7 +37,17 @@ public class NPCController : MonoBehaviour {
 	// check for drops
 	private float dropRadius = 1.5f;
 
-	public int state = 0;// give states numbers 0 = idle
+	// states
+	// state = 0 -> idle, available
+	// state = 1 -> moving to a location, unavailable
+	// state = 2 -> building, unavailable
+	public int state = 0;// give states numbers 0 = idle = available
+
+	// working
+	private IEnumerator workingCoroutine;
+
+	// building
+	public GameObject targetGameObject;
 
 	// Use this for initialization
 	void Start ()
@@ -57,6 +67,7 @@ public class NPCController : MonoBehaviour {
 		} else {
 			idleDirection = -1;
 		}
+
 	}
 	
 	// Update is called once per frame
@@ -83,23 +94,53 @@ public class NPCController : MonoBehaviour {
 //			rBody.velocity  =new Vector2(move * maxSpeed,rBody.velocity.y);
 //		}
 
-		if (state == 0) {
-			Idle ();
-		}
+//		if (state == 0) {
+//			Idle ();
+//		}
+//
+//		if (goToTarget && !stop) {
+//			if (transform.position.x < target.x) {
+//				direction = 1;
+//			} else if (transform.position.x > target.x) {
+//				direction = -1;
+//			}
+//			speed = maxSpeed;
+//		} else {
+//			if (stop) {
+//				direction = 0;
+//			} else {
+//				Idle();
+//			}
+//		}
 
-		if (goToTarget && !stop) {
-			if (transform.position.x < target.x) {
-				direction = 1;
-			} else if (transform.position.x > target.x) {
-				direction = -1;
-			}
-			speed = maxSpeed;
+		switch (state)
+		        {
+		        case 0:
+					Idle ();
+		            break;
+		        case 1:
+					if (goToTarget && !stop) {
+						if (transform.position.x < target.x) {
+							direction = 1;
+						} else if (transform.position.x > target.x) {
+							direction = -1;
+						}
+						speed = maxSpeed;
+					}
+		            break;
+				case 2:
+					direction = 0;
+		            break;
+		        default:
+					Idle ();
+		            break;
+		        }
+
+		if (direction == 0) {
+			Debug.Log("Constrain the x position");
+			rBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 		} else {
-			if (stop) {
-				direction = 0;
-			} else {
-				Idle();
-			}
+			rBody.constraints = RigidbodyConstraints2D.FreezeRotation;
 		}
 
 		rBody.velocity = new Vector2 (direction * speed, rBody.velocity.y);
@@ -174,6 +215,37 @@ public class NPCController : MonoBehaviour {
 		stop = false;
 		goToTarget = true;
 		state = 1;
+	}
+
+	public void StartBuilding(float buildTime){
+		workingCoroutine = WorkingAnimation(buildTime);
+		StartCoroutine(workingCoroutine);
+	}
+
+	public void StopBuilding ()
+	{
+		StopCoroutine(workingCoroutine);
+		Debug.Log("? stopped coroutine?");
+	}
+
+	IEnumerator WorkingAnimation (float seconds)
+	{
+		if (state == 2) {
+			Debug.Log("Show building animation");
+		}
+		yield return new WaitForSeconds (seconds);
+
+		// notify that work is done
+		if (state == 2) {
+			Building buildScript = targetGameObject.GetComponent<Building>();
+			buildScript.FinishedBuilding();
+		}
+
+		// return to idle state after work
+		if (targetGameObject != null) {
+			targetGameObject = null;
+		}
+		state = 0;
 	}
 
 }

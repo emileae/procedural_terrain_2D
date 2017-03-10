@@ -1,37 +1,54 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor.Animations;
+using System.ComponentModel.Design.Serialization;
 
 public class Payment : MonoBehaviour {
+
+	// Building
+	private Building buildingScript;
 
 	// Payments
 	public int level = 0;
 	public int maxLevel = 1;
 	public int buildCost = 3;
 	public int useCost = 1;
+	private int cost;
 	private int amountPaid = 0;
 	private bool paid = false;
 	public GameObject fishOutline;
 	public GameObject currencyIndicatorContainer;
+	private GameObject[] currencyIndicators;
+
+	void Start(){
+		buildingScript = GetComponent<Building>();
+	}
 
 	public bool Pay ()
 	{
-		amountPaid += 1;
-		paid = false;
+		if (buildingScript.payable) {
 
-		// not build
-		if (level == 0) {
-			if (amountPaid >= buildCost) {
-				paid = true;
-				amountPaid = 0;
-				level += 1;
+			amountPaid += 1;
+
+			if (currencyIndicators.Length > 0) {
+				Destroy (currencyIndicators [amountPaid - 1]);
 			}
-		} 
+
+			// not built
+			if (level == 0) {
+				if (amountPaid >= buildCost) {
+					paid = true;
+					amountPaid = 0;
+//				level += 1;
+					buildingScript.StartBuilding();
+				}
+			} 
 		// use cost
 		else {
-			if (amountPaid >= useCost) {
-				paid = true;
-				amountPaid = 0;
+				if (amountPaid >= useCost) {
+					paid = true;
+					amountPaid = 0;
+				}
 			}
 		}
 
@@ -41,7 +58,6 @@ public class Payment : MonoBehaviour {
 	void ShowCost ()
 	{
 		Bounds bounds = gameObject.transform.GetChild (0).GetComponent<MeshRenderer> ().bounds;
-		int cost;
 		if (level == 0) {
 			Debug.Log ("Cost = " + buildCost);
 			cost = buildCost;
@@ -50,18 +66,22 @@ public class Payment : MonoBehaviour {
 			cost = useCost;
 		}
 
+		currencyIndicators = new GameObject[cost];
+
 		for (int i = 0; i < cost; i++) {
-			GameObject currencyFishClone = Instantiate(fishOutline, new Vector3(transform.position.x, transform.position.y + (1.5f * bounds.size.y) + (i * 5), transform.position.z), Quaternion.Euler(-90, 0, 0)) as GameObject;
-			currencyFishClone.transform.parent = currencyIndicatorContainer.transform;
+			GameObject currencyFishClone = Instantiate(fishOutline, new Vector3(transform.position.x, transform.position.y + (1.5f * bounds.size.y) + (i * 3), transform.position.z), Quaternion.Euler(-90, 0, 0)) as GameObject;
+//			currencyFishClone.transform.parent = currencyIndicatorContainer.transform;
+			currencyIndicators[i] = currencyFishClone;
 		}
 
 	}
 
 	void HideCost ()
 	{
-		foreach (Transform child in currencyIndicatorContainer.transform) {
-			Destroy(child.gameObject);
+		for (int i = 0; i < currencyIndicators.Length; i++) {
+			Destroy(currencyIndicators[i]);
 		}
+
 	}
 
 	void OnTriggerEnter2D (Collider2D col)
@@ -69,7 +89,9 @@ public class Payment : MonoBehaviour {
 		GameObject go = col.gameObject;
 		if (go.tag == "Player") {
 
-			ShowCost();
+			if (!buildingScript.building) {
+				ShowCost ();
+			}
 
 			PlayerController playerScript = go.GetComponent<PlayerController>();
 			playerScript.payTarget = gameObject;
@@ -81,7 +103,9 @@ public class Payment : MonoBehaviour {
 		GameObject go = col.gameObject;
 		if (go.tag == "Player") {
 
-			HideCost();
+			if (currencyIndicators.Length > 0) {
+				HideCost ();
+			}
 
 			PlayerController playerScript = go.GetComponent<PlayerController>();
 			playerScript.payTarget = null;

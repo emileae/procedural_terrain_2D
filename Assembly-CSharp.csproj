@@ -46,6 +46,8 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\Blackboard.cs" />
+     <Compile Include="Assets\Scripts\Boat.cs" />
+     <Compile Include="Assets\Scripts\Building.cs" />
      <Compile Include="Assets\Scripts\Fish\Fish.cs" />
      <Compile Include="Assets\Scripts\Fish\FishController.cs" />
      <Compile Include="Assets\Scripts\Fish\FishManager.cs" />
