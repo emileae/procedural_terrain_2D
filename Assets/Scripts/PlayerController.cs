@@ -77,7 +77,6 @@ public class PlayerController : MonoBehaviour {
 
 		// prevent sliding
 		if (move == 0) {
-			Debug.Log ("Constrain the x position");
 			rBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 //			rBody.constraints = RigidbodyConstraints2D.FreezeRotation;
 		} else {
@@ -86,7 +85,6 @@ public class PlayerController : MonoBehaviour {
 
 //		}
 
-		Debug.Log ("Input.GetAxisRaw ('Horizontal'): " + Input.GetAxisRaw ("Horizontal"));
 //		Debug.Log ("Player move rBody.velocity: " + rBody.velocity);
 
 
@@ -113,16 +111,16 @@ public class PlayerController : MonoBehaviour {
 
 		if (payTarget != null) {
 			if (inputV < 0) {
-				Pay();
+				Pay ();
 			}
 		}
 
 
 		// call NPCs
-		bool call = Input.GetButton ("Fire3");
+		bool action = Input.GetButton ("Fire3");
 
-		if (call) {
-			blackboard.CallNPCs(transform.position);
+		if (action) {
+			blackboard.CallNPCs (transform.position);
 		}
 		
 	}

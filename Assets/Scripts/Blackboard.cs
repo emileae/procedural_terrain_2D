@@ -97,7 +97,7 @@ public class Blackboard : MonoBehaviour {
 
 	public Vector2[] GetFollowPath ()
 	{
-		Debug.Log("Fishing.Count..... " + fishingSpots.Count);
+//		Debug.Log("Fishing.Count..... " + fishingSpots.Count);
 		Vector2[] path = new Vector2[fishingSpots.Count];
 		for (int i = 0; i < fishingSpots.Count; i++) {
 			// add a random depth to fish target, up to 25% of total sea depth

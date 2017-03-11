@@ -137,7 +137,7 @@ public class NPCController : MonoBehaviour {
 		        }
 
 		if (direction == 0) {
-			Debug.Log("Constrain the x position");
+//			Debug.Log("Constrain the x position");
 			rBody.constraints = RigidbodyConstraints2D.FreezePositionX | RigidbodyConstraints2D.FreezeRotation;
 		} else {
 			rBody.constraints = RigidbodyConstraints2D.FreezeRotation;
@@ -231,7 +231,7 @@ public class NPCController : MonoBehaviour {
 	IEnumerator WorkingAnimation (float seconds)
 	{
 		if (state == 2) {
-			Debug.Log("Show building animation");
+			Debug.Log("...Show building animation...");
 		}
 		yield return new WaitForSeconds (seconds);
 

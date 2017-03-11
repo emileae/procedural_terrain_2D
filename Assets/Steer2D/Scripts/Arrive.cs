@@ -20,7 +20,7 @@ namespace Steer2D
 
 			if (distance < StopRadius) {
 				desiredVelocity = Vector2.zero;
-				Debug.Log("ARIVVED!!!!?!?!?!?!?");
+//				Debug.Log("ARIVVED!!!!?!?!?!?!?");
 //				this.enabled = false;
 				arrived = true;
 			} else if (distance < SlowRadius) {

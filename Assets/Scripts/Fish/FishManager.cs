@@ -30,9 +30,6 @@ public class FishManager : MonoBehaviour {
 		followScript = GetComponent<FollowPath> ();
 
 		Vector2[] path = blackboard.GetFollowPath ();
-		for (int i = 0; i < path.Length; i++) {
-			Debug.Log("Path " + i + " " + path[i]);
-		}
 		SetFollowPath(path);
 
 		InvokeRepeating("ToggleFlocking", 0.0f, 5.0f);
@@ -74,7 +71,6 @@ public class FishManager : MonoBehaviour {
 
 	void ToggleFlocking(){
 		if (Random.Range (0, 100) < 50 && !victimInWater) {
-			Debug.Log("!Flock!!!!!!");
 			followScript.enabled = !followScript.enabled;
 		}
 	}
