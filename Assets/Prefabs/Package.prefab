@@ -27,7 +27,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1000013036566856
 GameObject:
   m_ObjectHideFlags: 0
@@ -266,6 +266,5 @@ MonoBehaviour:
   building: 0
   buildTime: 20
   package: {fileID: 0}
-  rigidBodyContainer: {fileID: 1000010554494720}
   isPackage: 1
   packageType: 0

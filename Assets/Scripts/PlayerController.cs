@@ -29,6 +29,10 @@ public class PlayerController : MonoBehaviour {
 	public int currency = 100;
 	public GameObject payTarget = null;
 
+	// Packages
+	public bool nearPackage = false;
+	public bool carryingPackage = false;
+	public GameObject carriedPackage = null;
 
 	// Boat
 	public bool onBoat = false;
@@ -116,12 +120,39 @@ public class PlayerController : MonoBehaviour {
 		}
 
 
+
+
 		// call NPCs
 		bool action = Input.GetButton ("Fire3");
+		bool actionButtonDown = Input.GetButtonDown("Fire3");
 
-		if (action) {
+		if (actionButtonDown && !nearPackage && !carryingPackage) {
 			blackboard.CallNPCs (transform.position);
+		} else if (actionButtonDown && nearPackage && !carryingPackage) {
+			carryingPackage = true;
+			// TODO: make sure this GetComponent is not called excessively
+			payTarget.GetComponent<Building>().FollowPlayer(gameObject);
+			carriedPackage = payTarget;
+		}else if (actionButtonDown && carryingPackage){
+			carryingPackage = false;
+			carriedPackage.GetComponent<Building>().UnFollowPlayer(gameObject);
+			carriedPackage = null;
 		}
+
+//		else if (action && nearPackage) {
+//			if (carriedPackage == null) {
+////				Debug.Log ("Pick up package");
+//////			payTarget.transform.position = new Vector3 (transform.position.x, transform.position.y, payTarget.transform.position.z);
+////				payTarget.transform.parent = gameObject.transform;
+////				carryingPackage = true;
+//				StartCoroutine(PickUpPackage());
+//			}
+//		}
+
+//		if (action && carriedPackage != null) {
+//			StartCoroutine(DropOffPackage());
+//		}
+
 		
 	}
 
@@ -164,6 +195,22 @@ public class PlayerController : MonoBehaviour {
 	public void UnFreezePlayerX(){
 		rBody.constraints = RigidbodyConstraints2D.FreezeRotation;
 	}
+
+//	IEnumerator PickUpPackage(){
+//		carryingPackage = true;
+//		yield return new WaitForSeconds(0.1f);
+//		Debug.Log("Pick up package");
+////			payTarget.transform.position = new Vector3 (transform.position.x, transform.position.y, payTarget.transform.position.z);
+//		carriedPackage = payTarget;
+//		carriedPackage.transform.parent = gameObject.transform;
+//	}
+//
+//	IEnumerator DropOffPackage(){
+//		carryingPackage = false;
+//		yield return new WaitForSeconds(0.1f);
+//		Debug.Log("Drop off package");
+//		carriedPackage.transform.parent =null;
+//	}
 
 //	public void AddBoatVelocity(Vector2 velocity){
 //		onBoat = true;

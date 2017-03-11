@@ -1,14 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.IO;
+//using System.IO;
+//using System.Diagnostics;
 
 public class Building : MonoBehaviour {
 
 	public Blackboard blackboard;
 
+	// Building
+	private Payment paymentScript;
+
 	public bool payable = true;
 	public bool building = false;
 	public float buildTime = 10.0f;
+
+	// Geometry management
+	public GameObject unbuiltModel;
+
+	// following the player
+	private GameObject playerObject = null;
+	private bool followPlayer = false;
 
 	// Package details
 	public GameObject package;
@@ -35,10 +46,19 @@ public class Building : MonoBehaviour {
 			blackboard = GameObject.Find ("Blackboard").GetComponent<Blackboard> ();
 		}
 
+		paymentScript = GetComponent<Payment>();
+
 //		if (isPackage) {
 //			rBody = rigidBodyContainer.GetComponent<Rigidbody2D>();
 //		}
 	
+	}
+
+	void Update ()
+	{
+		if (followPlayer) {
+			transform.position = new Vector3(playerObject.transform.position.x, playerObject.transform.position.y + 5, transform.position.z);
+		}
 	}
 
 	void FixedUpdate ()
@@ -63,13 +83,18 @@ public class Building : MonoBehaviour {
 		Debug.Log ("Finished building... instantiate package maybe add a particle effect?");
 		if (!isPackage) {
 			GameObject buildingPackage = Instantiate (package, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
+			unbuiltModel.SetActive(false);
 		} else {
 			switch (packageType) {
 				case 0:
 					Debug.Log("Activate teh fishingspot model");
+					paymentScript.level += 1;
+					isPackage = false;
 					break;
 				default:
 					Debug.Log("Activate teh fishingspot model");
+					isPackage = false;
+					paymentScript.level += 1;
 					break;
 			}
 		}
@@ -82,14 +107,17 @@ public class Building : MonoBehaviour {
 		if (go.tag == "NPC") {
 			NPCController npcScript = go.GetComponent<NPCController> ();
 			if (npcScript.targetGameObject == gameObject) {
-				Debug.Log("Arrived at target building");
+				Debug.Log ("Arrived at target building");
 				npcScript.state = 2;
-				npcScript.StartBuilding(buildTime);
+				npcScript.StartBuilding (buildTime);
 			}
 		}
-//		if (go.tag == "Player") {
-//			PlayerController playerScript = go.GetComponent<PlayerController> ();
-//		}
+		if (go.tag == "Player") {
+			PlayerController playerScript = go.GetComponent<PlayerController> ();
+			if (isPackage) {
+				playerScript.nearPackage = true;
+			}
+		}
 	}
 
 	// TODO: fix so that it stops NPC from continuing to count the build process if NPC is removed from building collider
@@ -106,9 +134,22 @@ public class Building : MonoBehaviour {
 				}
 			}
 		}
-//		if (go.tag == "Player") {
-//			PlayerController playerScript = go.GetComponent<PlayerController> ();
-//		}
+		if (go.tag == "Player") {
+			PlayerController playerScript = go.GetComponent<PlayerController> ();
+			if (isPackage) {
+				playerScript.nearPackage = false;
+			}
+		}
+	}
+
+	public void FollowPlayer(GameObject player){
+		playerObject = player;
+		followPlayer = true;
+	}
+	public void UnFollowPlayer(GameObject player){
+		playerObject = null;
+		followPlayer = false;
+		transform.position = new Vector3(player.transform.position.x, player.transform.position.y, transform.position.z);
 	}
 
 }

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor.Animations;
-using System.ComponentModel.Design.Serialization;
+//using UnityEditor.Animations;
+//using System.ComponentModel.Design.Serialization;
 
 public class Payment : MonoBehaviour {
 
