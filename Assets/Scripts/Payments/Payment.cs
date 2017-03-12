@@ -8,6 +8,9 @@ public class Payment : MonoBehaviour {
 	// Building
 	private Building buildingScript;
 
+	// Player
+	private PlayerController playerScript;
+
 	// Payments
 	public int level = 0;
 	public int maxLevel = 1;
@@ -40,7 +43,14 @@ public class Payment : MonoBehaviour {
 					paid = true;
 					amountPaid = 0;
 //				level += 1;
-					buildingScript.StartBuilding();
+					buildingScript.StartBuilding ();
+
+					if (buildingScript.isPackage) {
+						// can on longer move the package once its been paid for
+						// change the package model
+						buildingScript.placedPackage = true;
+					}
+
 				}
 			} 
 		// use cost
@@ -93,7 +103,7 @@ public class Payment : MonoBehaviour {
 				ShowCost ();
 			}
 
-			PlayerController playerScript = go.GetComponent<PlayerController>();
+			playerScript = go.GetComponent<PlayerController>();
 			playerScript.payTarget = gameObject;
 		}
 	}
@@ -107,13 +117,17 @@ public class Payment : MonoBehaviour {
 				HideCost ();
 			}
 
-			PlayerController playerScript = go.GetComponent<PlayerController>();
+			playerScript = go.GetComponent<PlayerController>();
 			playerScript.payTarget = null;
 			// if player has paid something but exits before completing payment
 			if (!paid && amountPaid > 0) {
 				playerScript.ReturnPayment(amountPaid);
 				amountPaid = 0;
 			}
+
+			// reset Player Script
+			playerScript = null;
+
 		}
 	}
 }

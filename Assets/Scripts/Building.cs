@@ -1,7 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-//using System.IO;
-//using System.Diagnostics;
 
 public class Building : MonoBehaviour {
 
@@ -26,6 +24,7 @@ public class Building : MonoBehaviour {
 //	public GameObject rigidBodyContainer;
 //	private Rigidbody2D rBody;
 	public bool isPackage = false;
+	public bool placedPackage = false;
 	// package types
 	// type 0 -> fishing spot
 	// type 1 -> wall
@@ -37,6 +36,9 @@ public class Building : MonoBehaviour {
 	// type 7 -> boat
 	// type 8 -> fish garden
 	public int packageType = 0;
+
+	// Useable Building
+	public bool active = false;
 
 	// Use this for initialization
 	void Start ()
@@ -81,6 +83,7 @@ public class Building : MonoBehaviour {
 	public void FinishedBuilding ()
 	{
 		Debug.Log ("Finished building... instantiate package maybe add a particle effect?");
+		blackboard.RemoveFromBuildingList(gameObject);
 		if (!isPackage) {
 			GameObject buildingPackage = Instantiate (package, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
 			unbuiltModel.SetActive(false);
@@ -88,13 +91,19 @@ public class Building : MonoBehaviour {
 			switch (packageType) {
 				case 0:
 					Debug.Log("Activate teh fishingspot model");
+//					blackboard.CallNearestNPC(gameObject);
+					blackboard.AddGameObjectToList(gameObject, blackboard.workList);
 					paymentScript.level += 1;
 					isPackage = false;
+					active = true;
 					break;
 				default:
 					Debug.Log("Activate teh fishingspot model");
-					isPackage = false;
+//					blackboard.CallNearestNPC(gameObject);
+					blackboard.AddGameObjectToList(gameObject, blackboard.workList);
 					paymentScript.level += 1;
+					isPackage = false;
+					active = true;
 					break;
 			}
 		}
@@ -106,15 +115,33 @@ public class Building : MonoBehaviour {
 
 		if (go.tag == "NPC") {
 			NPCController npcScript = go.GetComponent<NPCController> ();
-			if (npcScript.targetGameObject == gameObject) {
+			// If its something that needs to be built / harvested
+			if (npcScript.targetGameObject == gameObject && paymentScript.level == 0) {
 				Debug.Log ("Arrived at target building");
 				npcScript.state = 2;
 				npcScript.StartBuilding (buildTime);
+			}
+
+			// if this isn't to be built... so NPC needs to work here
+			if (active && paymentScript.level != 0) {
+				Debug.Log ("Tell NPC to work here");
+				// if fishing spot then set npc state to fishing (0 -> 3)
+				switch (packageType) {
+					case 0:
+						npcScript.state = 3;
+						npcScript.GetFish(paymentScript.level);
+						break;
+					default:
+						npcScript.state = 3;
+						npcScript.GetFish(paymentScript.level);
+						break;
+				}
 			}
 		}
 		if (go.tag == "Player") {
 			PlayerController playerScript = go.GetComponent<PlayerController> ();
 			if (isPackage) {
+				Debug.Log("isPackage??????????????????????");
 				playerScript.nearPackage = true;
 			}
 		}
@@ -125,17 +152,18 @@ public class Building : MonoBehaviour {
 	{
 		GameObject go = col.gameObject;
 
-		if (go.tag == "NPC") {
-			NPCController npcScript = go.GetComponent<NPCController> ();
-			if (npcScript.targetGameObject == gameObject) {
-				if (npcScript.state == 2) {
-					// time to build is totally reset
-					npcScript.StopBuilding();
-				}
-			}
-		}
+//		if (go.tag == "NPC") {
+//			NPCController npcScript = go.GetComponent<NPCController> ();
+//			if (npcScript.targetGameObject == gameObject) {
+//				if (npcScript.state == 2) {
+//					// time to build is totally reset
+//					npcScript.StopBuilding();
+//				}
+//			}
+//		}
 		if (go.tag == "Player") {
 			PlayerController playerScript = go.GetComponent<PlayerController> ();
+			// Player bool nearPackage is also set in Payment.cs when player pays for a package
 			if (isPackage) {
 				playerScript.nearPackage = false;
 			}

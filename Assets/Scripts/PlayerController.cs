@@ -124,15 +124,20 @@ public class PlayerController : MonoBehaviour {
 
 		// call NPCs
 		bool action = Input.GetButton ("Fire3");
-		bool actionButtonDown = Input.GetButtonDown("Fire3");
+		bool actionButtonDown = Input.GetButtonDown ("Fire3");
 
 		if (actionButtonDown && !nearPackage && !carryingPackage) {
 			blackboard.CallNPCs (transform.position);
 		} else if (actionButtonDown && nearPackage && !carryingPackage) {
-			carryingPackage = true;
-			// TODO: make sure this GetComponent is not called excessively
-			payTarget.GetComponent<Building>().FollowPlayer(gameObject);
-			carriedPackage = payTarget;
+
+			Building buildingScript = payTarget.GetComponent<Building> ();
+			// can only pick up pakcages that have not been placed
+			if (!buildingScript.placedPackage) {
+				carryingPackage = true;
+				// TODO: make sure this GetComponent is not called excessively
+				buildingScript.FollowPlayer (gameObject);
+				carriedPackage = payTarget;
+			}
 		}else if (actionButtonDown && carryingPackage){
 			carryingPackage = false;
 			carriedPackage.GetComponent<Building>().UnFollowPlayer(gameObject);
@@ -171,11 +176,14 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	IEnumerator PassCoin(){
-		yield return new WaitForSeconds(0.3f);
-		currency -= 1;
-		Payment paymentScript = payTarget.GetComponent<Payment> ();
-		bool paid = paymentScript.Pay ();
+	IEnumerator PassCoin ()
+	{
+		yield return new WaitForSeconds (0.3f);
+		if (payTarget) {
+			currency -= 1;
+			Payment paymentScript = payTarget.GetComponent<Payment> ();
+			bool paid = paymentScript.Pay ();
+		}
 		passingCurrency = false;
 	}
 

@@ -10,6 +10,14 @@ public class Blackboard : MonoBehaviour {
 	public Bounds seaBounds;
 	public float seaBuffer = 1.0f;
 
+	// builder polling
+	private bool callingBuilders = false;
+	public float pollForBuilderTime = 5.0f;
+
+	// worker polling
+	private bool callingWorkers = false;
+	public float pollForWorkerTime = 5.0f;
+
 	public List<GameObject> npcs = new List<GameObject>();
 	public List<NPCController> npcScripts = new List<NPCController>();
 
@@ -23,6 +31,9 @@ public class Blackboard : MonoBehaviour {
 
 	// Buildings
 	public List<GameObject> buildingList = new List<GameObject>();
+
+	// Work / Tasks
+	public List<GameObject> workList = new List<GameObject>();
 
 	// Use this for initialization
 	void Awake ()
@@ -61,6 +72,21 @@ public class Blackboard : MonoBehaviour {
 
 	}
 
+	void Update ()
+	{
+		if (buildingList.Count > 0 && !callingBuilders) {
+			Debug.Log("Polling for builders....");
+			callingBuilders = true;
+			StartCoroutine(PollForBuilders());
+		}
+
+		if (workList.Count > 0 && !callingWorkers) {
+			Debug.Log("Polling for workers....");
+			callingBuilders = true;
+			StartCoroutine(PollForWorkers());
+		}
+	}
+
 	public void AddGameObjectToList(GameObject go, List<GameObject> list){
 		list.Add(go);
 	}
@@ -68,7 +94,10 @@ public class Blackboard : MonoBehaviour {
 	public void CallNPCs (Vector3 position)
 	{
 		for (int i = 0; i < npcScripts.Count; i++) {
-			npcScripts[i].GoToLocation(position);
+			// TODO: check this logic only applies to idling NPCs for now
+			if (npcScripts [i].state == 0) {
+				npcScripts [i].GoToLocation (position);
+			}
 		}
 	}
 
@@ -127,6 +156,31 @@ public class Blackboard : MonoBehaviour {
 
 		CallNearestNPC(building);
 
+	}
+
+	public void RemoveFromBuildingList (GameObject building)
+	{
+		buildingList.Remove(building);
+	}
+
+	IEnumerator PollForBuilders ()
+	{
+		yield return new WaitForSeconds (pollForBuilderTime);
+		if (buildingList.Count > 0) {
+			Debug.Log ("called a builder. . . . .");
+			CallNearestNPC (buildingList [0]);
+		}
+		callingBuilders = false;
+	}
+
+	IEnumerator PollForWorkers ()
+	{
+		yield return new WaitForSeconds (pollForWorkerTime);
+		if (workList.Count > 0) {
+			Debug.Log ("called a worker. . . . .");
+			CallNearestNPC (workList [0]);
+		}
+		callingWorkers = false;
 	}
 
 	public void CallNearestNPC (GameObject destination)

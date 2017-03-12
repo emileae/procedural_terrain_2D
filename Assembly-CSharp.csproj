@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{3B668CF2-5287-CC61-9AB0-413C3F0013AE}</ProjectGuid>
+    <ProjectGuid>{FF86D637-709D-8572-657E-2951AA156EDC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -48,6 +48,7 @@
      <Compile Include="Assets\Scripts\Blackboard.cs" />
      <Compile Include="Assets\Scripts\Boat.cs" />
      <Compile Include="Assets\Scripts\Building.cs" />
+     <Compile Include="Assets\Scripts\Camera\CameraFollow.cs" />
      <Compile Include="Assets\Scripts\Fish\Fish.cs" />
      <Compile Include="Assets\Scripts\Fish\FishController.cs" />
      <Compile Include="Assets\Scripts\Fish\FishManager.cs" />

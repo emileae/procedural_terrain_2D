@@ -41,6 +41,7 @@ public class NPCController : MonoBehaviour {
 	// state = 0 -> idle, available
 	// state = 1 -> moving to a location, unavailable
 	// state = 2 -> building, unavailable
+	// state = 3 -> fishing, unavailable (TODO: should probably respond to Player calling though.....)
 	public int state = 0;// give states numbers 0 = idle = available
 
 	// working
@@ -48,6 +49,12 @@ public class NPCController : MonoBehaviour {
 
 	// building
 	public GameObject targetGameObject;
+
+	// work specialisations
+	// fishing
+	public int fishCarryingCapacity = 3;
+	public int fishInHand = 0;
+	public float baseFishingTime = 10.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -76,65 +83,42 @@ public class NPCController : MonoBehaviour {
 
 		// check if grounded
 		grounded = Physics2D.OverlapCircle (groundCheck.position, groundRadius, whatIsGround);
-//		anim.SetBool ("Ground", grounded);
 
-		// check if climbing
-//		climbing = Physics2D.OverlapCircle (climbCheck.position, climbRadius, whatIsClimbable);
-
-//		anim.SetFloat ("vSpeed", rBody.velocity.y);
-
-//		float move = Input.GetAxis ("Horizontal");
-
-//		anim.SetFloat ("Speed", Mathf.Abs (move));
-
-//		if (climbing) {
-//			Debug.Log ("CLIMBING................");
-//			rBody.velocity = new Vector2 (move * maxSpeed, -rBody.velocity.y);
-//		} else {
-//			rBody.velocity  =new Vector2(move * maxSpeed,rBody.velocity.y);
-//		}
-
-//		if (state == 0) {
-//			Idle ();
-//		}
-//
-//		if (goToTarget && !stop) {
-//			if (transform.position.x < target.x) {
-//				direction = 1;
-//			} else if (transform.position.x > target.x) {
-//				direction = -1;
-//			}
-//			speed = maxSpeed;
-//		} else {
-//			if (stop) {
-//				direction = 0;
-//			} else {
-//				Idle();
-//			}
-//		}
-
-		switch (state)
-		        {
-		        case 0:
-					Idle ();
-		            break;
-		        case 1:
-					if (goToTarget && !stop) {
-						if (transform.position.x < target.x) {
-							direction = 1;
-						} else if (transform.position.x > target.x) {
-							direction = -1;
-						}
-						speed = maxSpeed;
+		switch (state) {
+			case 0:
+				Idle ();
+				break;
+			case 1:
+				if (goToTarget && !stop) {
+					if (transform.position.x < target.x) {
+						Debug.Log ("GO RIGHT");
+						direction = 1;
+					} else if (transform.position.x > target.x) {
+						Debug.Log ("GO LEFT");
+						direction = -1;
 					}
-		            break;
-				case 2:
-					direction = 0;
-		            break;
-		        default:
-					Idle ();
-		            break;
-		        }
+					speed = maxSpeed;
+				}
+				if (!targetGameObject) {
+					if (transform.position.x < (target.x + hitRadius) && transform.position.x > (target.x - hitRadius)) {
+						Debug.Log("Arrived at player's call");
+						direction = 0;
+						state = 0;
+						goToTarget = false;
+					}
+				}
+	            break;
+			case 2:
+				direction = 0;
+	            break;
+			case 3:
+				direction = 0;
+				Debug.Log("NPC has stopped to work... catching fish");
+	            break;
+	        default:
+				Idle ();
+	            break;
+        }
 
 		if (direction == 0) {
 //			Debug.Log("Constrain the x position");
@@ -174,32 +158,17 @@ public class NPCController : MonoBehaviour {
 	// put inputs here because if we use Fixedupdate, we may miss an input
 	void Update ()
 	{
-//		if (grounded && Input.GetButtonDown ("Jump")) {
-////			anim.SetBool ("Ground", false);
-//			rBody.AddForce (new Vector2 (0, jumpForce));
+
+		// stop after responding to player's call... does not apply to moving towards a building / work target
+//		if (goToTarget && !targetGameObject == null) {
+//			if (transform.position.x < (target.x + hitRadius) && transform.position.x > (target.x - hitRadius)) {
+//				Debug.Log("ARRIVED AT PLAYERS CALL");
+//				goToTarget = false;
+//				// return to idle state
+//				state = 0;
+////				target = null;
+//			}
 //		}
-
-//		if (climbing) {
-//			Debug.Log("CLIMBING................");
-//		}
-
-
-		// call NPCs
-//		bool call = Input.GetButton ("Fire3");
-//
-//		if (call) {
-//			Debug.Log("Come to: " + transform.position);
-//		}
-
-		// going to a target
-		if (goToTarget) {
-			if (transform.position.x < (target.x + hitRadius) && transform.position.x > (target.x - hitRadius)) {
-				goToTarget = false;
-				// return to idle state
-				state = 0;
-//				target = null;
-			}
-		}
 		
 	}
 
@@ -246,6 +215,38 @@ public class NPCController : MonoBehaviour {
 			targetGameObject = null;
 		}
 		state = 0;
+	}
+
+	public void GetFish (int FishingSpotLevel)
+	{
+		switch (FishingSpotLevel) {
+			case 1:
+				Debug.Log("Fetch " + fishCarryingCapacity + " fish");
+				StartCoroutine(GetAFish(FishingSpotLevel));
+				break;
+			default:
+				Debug.Log("Fetch " + fishCarryingCapacity + " fish");
+				StartCoroutine(GetAFish(FishingSpotLevel));
+				break;
+		}
+	}
+
+	IEnumerator GetAFish (int FishingSpotLevel)
+	{
+		// reduce wait time depending on the fishing spot level
+		// TODO: take into account the fishing spot's height.. lower spots give more fish / fish are caught faster
+		if (FishingSpotLevel <= 0) {
+			Debug.Log("ERROR - NPC is trying to fish at a level 0");
+			FishingSpotLevel = 1;
+		}
+		float waitTime = baseFishingTime / FishingSpotLevel;
+		yield return new WaitForSeconds (waitTime);
+		fishInHand += 1;
+		if (fishInHand < fishCarryingCapacity) {
+			GetFish (FishingSpotLevel);
+		}else{
+			Debug.Log("Drop fish off at fish rack");
+		}
 	}
 
 }
