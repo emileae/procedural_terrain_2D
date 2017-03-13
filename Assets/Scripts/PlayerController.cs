@@ -137,6 +137,8 @@ public class PlayerController : MonoBehaviour {
 				// TODO: make sure this GetComponent is not called excessively
 				buildingScript.FollowPlayer (gameObject);
 				carriedPackage = payTarget;
+			} else {
+				blackboard.CallNPCs (transform.position);
 			}
 		}else if (actionButtonDown && carryingPackage){
 			carryingPackage = false;

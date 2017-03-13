@@ -10,6 +10,10 @@ public class Blackboard : MonoBehaviour {
 	public Bounds seaBounds;
 	public float seaBuffer = 1.0f;
 
+	// base / fish rack
+	public GameObject fishRack;
+	public Building fishRackScript;
+
 	// builder polling
 	private bool callingBuilders = false;
 	public float pollForBuilderTime = 5.0f;
@@ -95,7 +99,16 @@ public class Blackboard : MonoBehaviour {
 	{
 		for (int i = 0; i < npcScripts.Count; i++) {
 			// TODO: check this logic only applies to idling NPCs for now
-			if (npcScripts [i].state == 0) {
+			// changed logic to include all NPCs within a certain distance
+			float maxDistance = 5.0f;
+			Vector2 dist = new Vector2(position.x, position.y) - new Vector2(npcs[i].transform.position.x, npcs[i].transform.position.y);
+			float distance = dist.magnitude;
+			// if (npcScripts [i].state == 0) {
+			if (distance < maxDistance && !npcScripts[i].isBuilding) {
+				Building npcWorkBuildingScript = npcScripts [i].workLocation.GetComponent<Building>();
+				npcWorkBuildingScript.active = false;
+				npcWorkBuildingScript.payable = true;
+				npcScripts [i].workLocation = null;
 				npcScripts [i].GoToLocation (position);
 			}
 		}
@@ -204,6 +217,16 @@ public class Blackboard : MonoBehaviour {
 			npcScripts[nearestNPCIndex].GoToLocation(destination.transform.position);
 			npcScripts[nearestNPCIndex].targetGameObject = destination;
 		}
+	}
+
+	// Fish Rakc / base logic
+	public void ActivateFishRack(GameObject activatedFishRack){
+		fishRack = activatedFishRack;
+		fishRackScript = fishRack.GetComponent<Building>();
+	}
+
+	public void AddFishToRack(){
+		fishRackScript.fishStored += 1;
 	}
 
 }

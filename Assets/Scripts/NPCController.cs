@@ -1,8 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEditor;
+using System.Security.Cryptography.X509Certificates;
 
 public class NPCController : MonoBehaviour {
+
+	private Blackboard blackboard;
 
 	public float speed;
 	public int direction = 1;
@@ -48,13 +51,18 @@ public class NPCController : MonoBehaviour {
 	private IEnumerator workingCoroutine;
 
 	// building
+	public bool isBuilding = false;
 	public GameObject targetGameObject;
 
 	// work specialisations
+
+	public GameObject workLocation;
+
 	// fishing
 	public int fishCarryingCapacity = 3;
 	public int fishInHand = 0;
 	public float baseFishingTime = 10.0f;
+	public float baseFishDropOffTime = 2.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -73,6 +81,10 @@ public class NPCController : MonoBehaviour {
 			idleDirection = 1;
 		} else {
 			idleDirection = -1;
+		}
+
+		if (blackboard == null) {
+			blackboard = GameObject.Find("Blackboard").GetComponent<Blackboard>();
 		}
 
 	}
@@ -187,12 +199,14 @@ public class NPCController : MonoBehaviour {
 	}
 
 	public void StartBuilding(float buildTime){
+		isBuilding = true;
 		workingCoroutine = WorkingAnimation(buildTime);
 		StartCoroutine(workingCoroutine);
 	}
 
 	public void StopBuilding ()
 	{
+		isBuilding = false;
 		StopCoroutine(workingCoroutine);
 		Debug.Log("? stopped coroutine?");
 	}
@@ -208,6 +222,7 @@ public class NPCController : MonoBehaviour {
 		if (state == 2) {
 			Building buildScript = targetGameObject.GetComponent<Building>();
 			buildScript.FinishedBuilding();
+			isBuilding = false;
 		}
 
 		// return to idle state after work
@@ -236,7 +251,7 @@ public class NPCController : MonoBehaviour {
 		// reduce wait time depending on the fishing spot level
 		// TODO: take into account the fishing spot's height.. lower spots give more fish / fish are caught faster
 		if (FishingSpotLevel <= 0) {
-			Debug.Log("ERROR - NPC is trying to fish at a level 0");
+			Debug.Log ("ERROR - NPC is trying to fish at a level 0");
 			FishingSpotLevel = 1;
 		}
 		float waitTime = baseFishingTime / FishingSpotLevel;
@@ -244,9 +259,53 @@ public class NPCController : MonoBehaviour {
 		fishInHand += 1;
 		if (fishInHand < fishCarryingCapacity) {
 			GetFish (FishingSpotLevel);
-		}else{
-			Debug.Log("Drop fish off at fish rack");
+		} else {
+			Debug.Log ("Drop fish off at fish rack");
+			targetGameObject = blackboard.fishRack;
+			GoToLocation (blackboard.fishRack.transform.position);
 		}
+
+	}
+	public void DropOffFish (int fishRackLevel)
+	{
+		Debug.Log ("fishInHand: " + fishInHand);
+		if (fishInHand > 0) {
+			// TODO: fish are removed regardless of whether they're stored
+			// TODO: give an indication that a fish was thrown away
+			fishInHand -= 1;
+			if (blackboard.fishRackScript.fishStored < blackboard.fishRackScript.maxFishStored) {
+				StartCoroutine (DropOffAFish (fishRackLevel));
+			} else {
+//				Debug.Log("Threw " + fishInHand + " fish away... now go back to work");
+//				fishInHand = 0;
+//				// go back to work
+//				targetGameObject = workLocation;
+//				GoToLocation (workLocation.transform.position);
+				StartCoroutine(ThrowFishAway());
+			}
+		} else {
+			Debug.Log("Go back to work......");
+			// go back to work
+			targetGameObject = workLocation;
+			GoToLocation (workLocation.transform.position);
+		}
+	}
+
+	IEnumerator DropOffAFish(int fishRackLevel){
+		float waitTime = baseFishDropOffTime / fishRackLevel;
+		yield return new WaitForSeconds(waitTime);
+		blackboard.AddFishToRack();
+		Debug.Log("drop off a fish, still got: " + fishInHand);
+		DropOffFish(fishRackLevel);
+	}
+
+	IEnumerator ThrowFishAway (){
+		yield return new WaitForSeconds(1.0f);
+		Debug.Log("Threw " + fishInHand + " fish away... now go back to work");
+		fishInHand = 0;
+		// go back to work
+		targetGameObject = workLocation;
+		GoToLocation (workLocation.transform.position);
 	}
 
 }

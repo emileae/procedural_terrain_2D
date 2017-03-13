@@ -23,8 +23,11 @@ public class Payment : MonoBehaviour {
 	public GameObject currencyIndicatorContainer;
 	private GameObject[] currencyIndicators;
 
+	private Bounds bounds;
+
 	void Start(){
 		buildingScript = GetComponent<Building>();
+		bounds = GetComponent<BoxCollider2D>().bounds;
 	}
 
 	public bool Pay ()
@@ -67,7 +70,8 @@ public class Payment : MonoBehaviour {
 
 	void ShowCost ()
 	{
-		Bounds bounds = gameObject.transform.GetChild (0).GetComponent<MeshRenderer> ().bounds;
+//		Bounds bounds = gameObject.transform.GetChild (0).GetComponent<MeshRenderer> ().bounds;
+		// TODO: re-work the use cost / build cost thing, now the use cost doesn't show up because its just the package build cost
 		if (level == 0) {
 			Debug.Log ("Cost = " + buildCost);
 			cost = buildCost;
@@ -99,7 +103,7 @@ public class Payment : MonoBehaviour {
 		GameObject go = col.gameObject;
 		if (go.tag == "Player") {
 
-			if (!buildingScript.building) {
+			if (!buildingScript.building && !buildingScript.active) {
 				ShowCost ();
 			}
 

@@ -5,7 +5,7 @@ public class Building : MonoBehaviour {
 
 	public Blackboard blackboard;
 
-	// Building
+	// PAyment
 	private Payment paymentScript;
 
 	public bool payable = true;
@@ -39,6 +39,10 @@ public class Building : MonoBehaviour {
 
 	// Useable Building
 	public bool active = false;
+
+	// Fish Rack specific
+	public int maxFishStored;
+	public int fishStored = 0;
 
 	// Use this for initialization
 	void Start ()
@@ -76,26 +80,38 @@ public class Building : MonoBehaviour {
 //			rBody.isKinematic = true;
 //			rigidBodyContainer.SetActive(false);
 		}
-		blackboard.AddToBuildingList(gameObject);
+
+		if (packageType == 2) {
+			FinishedBuilding ();
+		}else{
+			blackboard.AddToBuildingList (gameObject);
+		}
 
 	}
 
 	public void FinishedBuilding ()
 	{
 		Debug.Log ("Finished building... instantiate package maybe add a particle effect?");
-		blackboard.RemoveFromBuildingList(gameObject);
+		blackboard.RemoveFromBuildingList (gameObject);
+		building = false;
 		if (!isPackage) {
 			GameObject buildingPackage = Instantiate (package, new Vector3 (transform.position.x, transform.position.y, transform.position.z), Quaternion.identity) as GameObject;
-			unbuiltModel.SetActive(false);
+			unbuiltModel.SetActive (false);
 		} else {
 			switch (packageType) {
-				case 0:
+				case 0:// fishingSpot
 					Debug.Log("Activate teh fishingspot model");
 //					blackboard.CallNearestNPC(gameObject);
 					blackboard.AddGameObjectToList(gameObject, blackboard.workList);
 					paymentScript.level += 1;
 					isPackage = false;
 					active = true;
+					break;
+				case 2:// fishRack
+					isPackage = false;
+					active = true;
+					paymentScript.level += 1;
+					blackboard.ActivateFishRack(gameObject);
 					break;
 				default:
 					Debug.Log("Activate teh fishingspot model");
@@ -123,13 +139,23 @@ public class Building : MonoBehaviour {
 			}
 
 			// if this isn't to be built... so NPC needs to work here
-			if (active && paymentScript.level != 0) {
+			if (active && npcScript.targetGameObject == gameObject && paymentScript.level != 0) {
 				Debug.Log ("Tell NPC to work here");
+
+				// if NPC is not currently employed
+				if (npcScript.workLocation == null) {
+					npcScript.workLocation = gameObject;
+				}
+
 				// if fishing spot then set npc state to fishing (0 -> 3)
 				switch (packageType) {
 					case 0:
 						npcScript.state = 3;
 						npcScript.GetFish(paymentScript.level);
+						break;
+					case 2:
+						npcScript.state = 3;
+						npcScript.DropOffFish(paymentScript.level);
 						break;
 					default:
 						npcScript.state = 3;
