@@ -56,11 +56,12 @@ public class Payment : MonoBehaviour {
 
 				}
 			} 
-		// use cost
-		else {
+			// use cost
+			else {
 				if (amountPaid >= useCost) {
 					paid = true;
 					amountPaid = 0;
+					Debug.Log("Paid use cost... not sure if its activating anything?");
 				}
 			}
 		}

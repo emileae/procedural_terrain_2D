@@ -397,8 +397,14 @@ MonoBehaviour:
   blackboard: {fileID: 0}
   payable: 1
   building: 0
-  buildTime: 10
+  buildTime: 3
   unbuiltModel: {fileID: 1000010610487130}
   package: {fileID: 1000013322686444, guid: a08bd31040cc74135a5e51c3a18c3082, type: 2}
   isPackage: 0
+  placedPackage: 0
   packageType: 0
+  active: 0
+  maxFishStored: 0
+  fishStored: 0
+  totalFishingRounds: 0
+  numFishingRoundsToClose: 2

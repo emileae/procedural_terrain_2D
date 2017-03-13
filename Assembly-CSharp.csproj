@@ -61,7 +61,7 @@
      <Compile Include="Assets\Scripts\NPCController.cs" />
      <Compile Include="Assets\Scripts\Noise.cs" />
      <Compile Include="Assets\Scripts\Payments\Payment.cs" />
-     <Compile Include="Assets\Scripts\PlayerController.cs" />
+     <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Sea.cs" />
      <Compile Include="Assets\Steer2D\Examples\Assets\Target.cs" />
      <Compile Include="Assets\Steer2D\Scripts\Arrive.cs" />

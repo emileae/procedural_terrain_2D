@@ -42,20 +42,23 @@ public class Blackboard : MonoBehaviour {
 	// Use this for initialization
 	void Awake ()
 	{
-		mapGenerator.GenerateMap();
+		mapGenerator.GenerateMap ();
 
 
 		// set up the sea Bounds
 		if (sea == null) {
-			sea = GameObject.Find("Sea");
-			seaBounds = sea.transform.GetChild(0).GetComponent<MeshRenderer>().bounds;
+			sea = GameObject.Find ("Sea");
+			seaBounds = sea.transform.GetChild (0).GetComponent<MeshRenderer> ().bounds;
 		}
 
 		// set up lists
 		GameObject npcContainer = GameObject.Find ("NPCs");
 		foreach (Transform child in npcContainer.transform) {
-			npcs.Add (child.gameObject);
-			npcScripts.Add (child.GetComponent<NPCController> ());
+			NPCController npcScript = child.GetComponent<NPCController> ();
+			if (npcScript.hired) {
+				npcs.Add (child.gameObject);
+				npcScripts.Add (npcScript);
+			}
 		}
 
 		GameObject fishContainer = GameObject.Find ("Fish");
@@ -93,6 +96,15 @@ public class Blackboard : MonoBehaviour {
 
 	public void AddGameObjectToList(GameObject go, List<GameObject> list){
 		list.Add(go);
+	}
+	public void RemoveGameObjectToList(GameObject go, List<GameObject> list){
+		list.Remove(go);
+	}
+
+	public void AddNPC (GameObject npc)
+	{
+		npcs.Add (npc.gameObject);
+		npcScripts.Add (npc.GetComponent<NPCController>());
 	}
 	
 	public void CallNPCs (Vector3 position)

@@ -5,7 +5,7 @@ public class Building : MonoBehaviour {
 
 	public Blackboard blackboard;
 
-	// PAyment
+	// Payment
 	private Payment paymentScript;
 
 	public bool payable = true;
@@ -44,6 +44,10 @@ public class Building : MonoBehaviour {
 	public int maxFishStored;
 	public int fishStored = 0;
 
+	// Fishing Spot tracking
+	public int totalFishingRounds = 0;
+	public int numFishingRoundsToClose = 3;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -75,11 +79,6 @@ public class Building : MonoBehaviour {
 	{
 		building = true;
 		payable = false;
-		if (isPackage) {
-			Debug.Log ("Started to build package");
-//			rBody.isKinematic = true;
-//			rigidBodyContainer.SetActive(false);
-		}
 
 		if (packageType == 2) {
 			FinishedBuilding ();
@@ -125,12 +124,19 @@ public class Building : MonoBehaviour {
 		}
 	}
 
+	void CloseBuilding(){
+		payable = true;
+		active = false;
+		totalFishingRounds = 0;
+	}
+
 	void OnTriggerEnter2D (Collider2D col)
 	{
 		GameObject go = col.gameObject;
 
 		if (go.tag == "NPC") {
 			NPCController npcScript = go.GetComponent<NPCController> ();
+
 			// If its something that needs to be built / harvested
 			if (npcScript.targetGameObject == gameObject && paymentScript.level == 0) {
 				Debug.Log ("Arrived at target building");
@@ -142,6 +148,9 @@ public class Building : MonoBehaviour {
 			if (active && npcScript.targetGameObject == gameObject && paymentScript.level != 0) {
 				Debug.Log ("Tell NPC to work here");
 
+				// remove it if its on the workList
+				blackboard.RemoveGameObjectToList(gameObject, blackboard.workList);
+
 				// if NPC is not currently employed
 				if (npcScript.workLocation == null) {
 					npcScript.workLocation = gameObject;
@@ -149,25 +158,37 @@ public class Building : MonoBehaviour {
 
 				// if fishing spot then set npc state to fishing (0 -> 3)
 				switch (packageType) {
-					case 0:
-						npcScript.state = 3;
-						npcScript.GetFish(paymentScript.level);
-						break;
-					case 2:
-						npcScript.state = 3;
-						npcScript.DropOffFish(paymentScript.level);
-						break;
-					default:
-						npcScript.state = 3;
-						npcScript.GetFish(paymentScript.level);
-						break;
+				case 0:
+					npcScript.state = 3;
+					npcScript.GetFish (paymentScript.level);
+					totalFishingRounds += 1;
+					if (totalFishingRounds > numFishingRoundsToClose) {
+						Debug.Log("Close building then idle");
+						CloseBuilding ();
+						npcScript.Idle();
+					}
+					break;
+				case 2:
+					npcScript.state = 3;
+					npcScript.DropOffFish (paymentScript.level);
+					break;
+				default:
+					Debug.Log ("Switch statement error - triggerEnter2D in Building.cs");
+					break;
 				}
 			}
+
+			if (!active && npcScript.targetGameObject == gameObject) {
+				if (npcScript.workLocation == gameObject) {
+					Debug.Log("Idle!!!!!!!!!");
+					npcScript.Idle();
+				}
+			}
+
 		}
 		if (go.tag == "Player") {
 			PlayerController playerScript = go.GetComponent<PlayerController> ();
 			if (isPackage) {
-				Debug.Log("isPackage??????????????????????");
 				playerScript.nearPackage = true;
 			}
 		}
@@ -178,15 +199,6 @@ public class Building : MonoBehaviour {
 	{
 		GameObject go = col.gameObject;
 
-//		if (go.tag == "NPC") {
-//			NPCController npcScript = go.GetComponent<NPCController> ();
-//			if (npcScript.targetGameObject == gameObject) {
-//				if (npcScript.state == 2) {
-//					// time to build is totally reset
-//					npcScript.StopBuilding();
-//				}
-//			}
-//		}
 		if (go.tag == "Player") {
 			PlayerController playerScript = go.GetComponent<PlayerController> ();
 			// Player bool nearPackage is also set in Payment.cs when player pays for a package

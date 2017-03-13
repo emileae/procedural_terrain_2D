@@ -11,23 +11,6 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1000013322686444}
   m_IsPrefabParent: 1
---- !u!1 &1000010554494720
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 4000012952677682}
-  - 50: {fileID: 50000010792837806}
-  - 61: {fileID: 61000010197326990}
-  m_Layer: 11
-  m_Name: RigidBodyComponent
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
 --- !u!1 &1000013036566856
 GameObject:
   m_ObjectHideFlags: 0
@@ -99,28 +82,14 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013322686444}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -25.5, y: -17.7, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000013088471750}
   - {fileID: 4000011944319780}
-  - {fileID: 4000012952677682}
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!4 &4000012952677682
-Transform:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010554494720}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_Children: []
-  m_Father: {fileID: 4000012189970790}
-  m_RootOrder: 2
 --- !u!4 &4000013088471750
 Transform:
   m_ObjectHideFlags: 1
@@ -170,37 +139,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013036566856}
   m_Mesh: {fileID: 4300000, guid: e9af9a38d2e7c4642b99030764e0f031, type: 3}
---- !u!50 &50000010792837806
-Rigidbody2D:
-  serializedVersion: 2
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010554494720}
-  m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 0
---- !u!61 &61000010197326990
-BoxCollider2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000010554494720}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_Offset: {x: 0.06, y: 0.64}
-  serializedVersion: 2
-  m_Size: {x: 1.9, y: 1.34}
 --- !u!61 &61000013628653156
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -264,7 +202,14 @@ MonoBehaviour:
   blackboard: {fileID: 0}
   payable: 1
   building: 0
-  buildTime: 20
+  buildTime: 2
+  unbuiltModel: {fileID: 0}
   package: {fileID: 0}
   isPackage: 1
+  placedPackage: 0
   packageType: 0
+  active: 0
+  maxFishStored: 0
+  fishStored: 0
+  totalFishingRounds: 0
+  numFishingRoundsToClose: 3

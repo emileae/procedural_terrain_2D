@@ -7,10 +7,13 @@ public class NPCController : MonoBehaviour {
 
 	private Blackboard blackboard;
 
+	public bool hired = false;
+
 	public float speed;
 	public int direction = 1;
 	public float maxSpeed = 10f;
 	public float idleSpeed = 3.0f;
+	public float unemployedSpeed = 1.0f;
 	public int idleDirection = 1;
 
 	private bool facingRight = true;
@@ -61,7 +64,7 @@ public class NPCController : MonoBehaviour {
 	// fishing
 	public int fishCarryingCapacity = 3;
 	public int fishInHand = 0;
-	public float baseFishingTime = 10.0f;
+	public float baseFishingTime = 2.0f;
 	public float baseFishDropOffTime = 2.0f;
 
 	// Use this for initialization
@@ -149,9 +152,19 @@ public class NPCController : MonoBehaviour {
 		}
 	}
 
-	void Idle(){
+	public void Idle ()
+	{
 		direction = idleDirection;
-		speed = idleSpeed;
+		workLocation = null;
+		targetGameObject = null;
+		goToTarget = false;
+		Debug.Log("Go To Target: " + goToTarget);
+		state = 0;
+		if (hired) {
+			speed = idleSpeed;
+		} else {
+			speed = unemployedSpeed;
+		}
 	}
 
 	public void ReachedShoreLine ()
@@ -184,6 +197,20 @@ public class NPCController : MonoBehaviour {
 		
 	}
 
+	void OnCollisionEnter2D (Collision2D col)
+	{
+		GameObject go = col.gameObject;
+		if (!hired && go.tag == "Player") {
+			Debug.Log("Hit the player.....");
+			// if an unhired NPC is hit by the player then it becomes hired... and physics interactions cease
+			// unhired NPC layer -> 12
+			// hired NPC layer -> 9
+			gameObject.layer = 9;
+			hired = true;
+			blackboard.AddNPC(gameObject);
+		}
+	}
+
 	void Flip() {
 		facingRight = !facingRight;
 		Vector3 theScale = transform.localScale;
@@ -194,6 +221,7 @@ public class NPCController : MonoBehaviour {
 	public void GoToLocation(Vector3 position){
 		target = position;
 		stop = false;
+		Debug.Log(" - - - - - - -Set goToTarget = true");
 		goToTarget = true;
 		state = 1;
 	}
