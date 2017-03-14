@@ -5,7 +5,7 @@ public class NPCMove : MonoBehaviour {
 
 	private Rigidbody2D rb;
 
-	public float stopDistance = 0.5f;
+	public float stopDistance = 2f;
 	public int direction = 1;
 	public float idleSpeed = 1.5f;
 	private bool idling = true;

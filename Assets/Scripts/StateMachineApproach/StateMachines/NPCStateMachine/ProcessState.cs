@@ -66,7 +66,7 @@ public class ProcessState : INPCState {
 
 	void StopProcessing(){
 		npc.CreateProcessedResource(instructions.processType);
-		npc.DestroyTarget();
+		npc.DeactivateTarget();
 		spentProcessingTime = 0f;
 		ToIdleState();
 	}

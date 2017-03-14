@@ -49,8 +49,9 @@ public class StatePatternNPC : MonoBehaviour {
 		currentState.OnTriggerEnter2D(col);
 	}
 
-	public void DestroyTarget (){
-		Destroy(target.gameObject);
+	public void DeactivateTarget (){
+		target.gameObject.SetActive(false);
+		target = null;
 	}
 
 	public void PlayProcessAnimation (int processType){
@@ -60,7 +61,7 @@ public class StatePatternNPC : MonoBehaviour {
 	public void CreateProcessedResource (int processType){
 		Debug.Log ("Instantiate a package for type: " + processType);
 		GameObject prefab = blackboard.GetProcessedPrefab(processType);
-		Instantiate(prefab, transform.position, Quaternion.identity);
+		Instantiate(prefab, target.position, Quaternion.identity);
 	}
 
 }
