@@ -54,8 +54,10 @@ public class MapGenerator : MonoBehaviour {
 	public void GenerateMap ()
 	{
 		// remove all previously generated prefabs
-		foreach (Transform child in instantiatedPoints.transform) {
-			GameObject.DestroyImmediate (child.gameObject);
+		if (instantiatedPoints != null) {
+			foreach (Transform child in instantiatedPoints.transform) {
+				GameObject.DestroyImmediate (child.gameObject);
+			}
 		}
 
 
@@ -158,9 +160,9 @@ public class MapGenerator : MonoBehaviour {
 		string[] points = new string[(noiseMap.Length - (noiseMap.Length % edgePointsPerUnit)) / edgePointsPerUnit];
 
 		// number of units to place
-		int NumWells = 5;
-		int NumFishingSpots = 2;
-		int numTrees = 12;
+		int NumWells = 0;//5
+		int NumFishingSpots = 0;//2
+		int numTrees = 0;//12
 
 		for (int i = 0; i < points.Length; i++) {
 //			Debug.Log("Settings point " + i);

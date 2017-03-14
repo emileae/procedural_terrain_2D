@@ -5,6 +5,7 @@ public static class MeshGenerator {
 
 	public static MeshData GenerateTerrainMesh (float[] heightMap, float heightMultiplier, float meshHeightOffset, float wellDepthCutoff, float wellDepth)
 	{
+		Debug.Log("Generating Terrain mesh");
 		int width = heightMap.GetLength (0);
 		//  height = 2 -> 2 rows of vertices
 		int height = 2;// set this manually... only want a surface for now
