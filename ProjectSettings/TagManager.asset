@@ -10,6 +10,7 @@ TagManager:
   - FishRack
   - Edge
   - Building
+  - Resource
   layers:
   - Default
   - TransparentFX

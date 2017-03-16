@@ -16,6 +16,10 @@ public class Board : MonoBehaviour {
 	
 	}
 
+	// Processed prefab types
+	// type 0 -> wood
+	// type 1 -> rock
+	// type 2 -> bush
 	public GameObject GetProcessedPrefab (int processType)
 	{
 		switch (processType) {

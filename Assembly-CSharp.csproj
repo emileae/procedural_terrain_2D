@@ -64,7 +64,10 @@
      <Compile Include="Assets\Scripts\Player\PlayerController.cs" />
      <Compile Include="Assets\Scripts\Sea.cs" />
      <Compile Include="Assets\Scripts\StateMachineApproach\Board.cs" />
+     <Compile Include="Assets\Scripts\StateMachineApproach\Foundation.cs" />
      <Compile Include="Assets\Scripts\StateMachineApproach\NPCInstructions\NPCInstructions.cs" />
+     <Compile Include="Assets\Scripts\StateMachineApproach\PackagedResource.cs" />
+     <Compile Include="Assets\Scripts\StateMachineApproach\PayTarget.cs" />
      <Compile Include="Assets\Scripts\StateMachineApproach\SimpleMovement\NPCMove.cs" />
      <Compile Include="Assets\Scripts\StateMachineApproach\StateMachines\BuildingStateMachine\GeneralBuilding.cs" />
      <Compile Include="Assets\Scripts\StateMachineApproach\StateMachines\NPCStateMachine\BuildState.cs" />

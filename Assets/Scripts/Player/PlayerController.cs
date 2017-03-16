@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour {
 	public GameObject payTarget = null;
 
 	// Packages
+	public GameObject carryLocation;
 	public bool nearPackage = false;
 	public bool carryingPackage = false;
 	public GameObject carriedPackage = null;
@@ -127,23 +128,39 @@ public class PlayerController : MonoBehaviour {
 		bool actionButtonDown = Input.GetButtonDown ("Fire3");
 
 		if (actionButtonDown && !nearPackage && !carryingPackage) {
-			blackboard.CallNPCs (transform.position);
+			
+			// Before Statemachine
+//			blackboard.CallNPCs (transform.position);
 		} else if (actionButtonDown && nearPackage && !carryingPackage) {
 
-			Building buildingScript = payTarget.GetComponent<Building> ();
-			// can only pick up pakcages that have not been placed
-			if (!buildingScript.placedPackage) {
-				carryingPackage = true;
-				// TODO: make sure this GetComponent is not called excessively
-				buildingScript.FollowPlayer (gameObject);
-				carriedPackage = payTarget;
-			} else {
-				blackboard.CallNPCs (transform.position);
-			}
+			PackagedResource packageScript = payTarget.GetComponent<PackagedResource>();
+			packageScript.FollowPlayer(carryLocation);
+			carryingPackage = true;
+			carriedPackage = payTarget;
+			
+
+		// Before StateMachine
+//			Building buildingScript = payTarget.GetComponent<Building> ();
+//			// can only pick up pakcages that have not been placed
+//			if (!buildingScript.placedPackage) {
+//				carryingPackage = true;
+//				// TODO: make sure this GetComponent is not called excessively
+//				buildingScript.FollowPlayer (gameObject);
+//				carriedPackage = payTarget;
+//			} else {
+//				blackboard.CallNPCs (transform.position);
+//			}
 		}else if (actionButtonDown && carryingPackage){
+
+			PackagedResource packageScript = payTarget.GetComponent<PackagedResource>();
+			packageScript.UnFollowPlayer();
 			carryingPackage = false;
-			carriedPackage.GetComponent<Building>().UnFollowPlayer(gameObject);
 			carriedPackage = null;
+
+			// Before StateMachine
+//			carryingPackage = false;
+//			carriedPackage.GetComponent<Building>().UnFollowPlayer(gameObject);
+//			carriedPackage = null;
 		}
 
 //		else if (action && nearPackage) {

@@ -39,9 +39,11 @@ GameObject:
   - 4: {fileID: 4000014036825200}
   - 61: {fileID: 61000014063317046}
   - 114: {fileID: 114000010888724408}
+  - 114: {fileID: 114000014072081852}
+  - 114: {fileID: 114000010988927314}
   m_Layer: 11
   m_Name: package0
-  m_TagString: Untagged
+  m_TagString: Resource
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -180,5 +182,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 340bf7be41fef46b3a3c5783906eacae, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetType: 0
+  targetType: 1
   processType: 0
+  packageType: 0
+  foundationType: 0
+--- !u!114 &114000010988927314
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011290620054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca1fdd1981b9c4e6192bb5ed3868c038, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 1
+--- !u!114 &114000014072081852
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011290620054}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1faed4419ac114a668362a3811aefdd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
