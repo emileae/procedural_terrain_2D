@@ -79,6 +79,8 @@
      <Compile Include="Assets\Scripts\StateMachineApproach\StateMachines\NPCStateMachine\OffLoadState.cs" />
      <Compile Include="Assets\Scripts\StateMachineApproach\StateMachines\NPCStateMachine\ProcessState.cs" />
      <Compile Include="Assets\Scripts\StateMachineApproach\StateMachines\NPCStateMachine\StatePatternNPC.cs" />
+     <Compile Include="Assets\Scripts\StateMachineApproach\Structures\FishingStructure.cs" />
+     <Compile Include="Assets\Scripts\StateMachineApproach\Structures\Structure.cs" />
      <Compile Include="Assets\Steer2D\Examples\Assets\Target.cs" />
      <Compile Include="Assets\Steer2D\Scripts\Arrive.cs" />
      <Compile Include="Assets\Steer2D\Scripts\Evade.cs" />

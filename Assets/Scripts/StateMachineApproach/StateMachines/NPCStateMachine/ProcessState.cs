@@ -57,7 +57,7 @@ public class ProcessState : INPCState {
 	void ProcessTarget (){
 		instructions = npc.target.GetComponent<NPCInstructions> ();
 		if (instructions != null) {
-			npc.PlayProcessAnimation(instructions.processType);
+			npc.PlayProcessAnimation(instructions.resourceType);
 		} else {
 			Debug.Log ("No instructions so just idle about....");
 			ToIdleState ();
@@ -65,7 +65,7 @@ public class ProcessState : INPCState {
 	}
 
 	void StopProcessing(){
-		npc.CreateProcessedResource(instructions.processType);
+		npc.CreateProcessedResource(instructions.resourceType);
 		npc.DeactivateTarget();
 		spentProcessingTime = 0f;
 		ToIdleState();

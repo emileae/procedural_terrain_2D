@@ -11,6 +11,7 @@ public class GetInstructionsState : INPCState {
 	}
 
 	public void UpdateState (){
+		npc.busy = true;
 		CheckTarget();
 	}
 

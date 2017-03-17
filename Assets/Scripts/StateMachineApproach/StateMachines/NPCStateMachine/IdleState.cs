@@ -15,6 +15,8 @@ public class IdleState : INPCState {
 
 	public void UpdateState ()
 	{
+		npc.busy = false;
+		npc.toIdle = false;
 		Debug.Log("entering Idle()? " + enteringIdle);
 		// if npc is being sent to the idle state then reset target
 		if (enteringIdle) {

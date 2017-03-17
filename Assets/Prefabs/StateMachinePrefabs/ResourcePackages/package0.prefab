@@ -183,8 +183,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetType: 1
-  processType: 0
-  packageType: 0
+  resourceType: 0
   foundationType: 0
 --- !u!114 &114000010988927314
 MonoBehaviour:
@@ -197,7 +196,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca1fdd1981b9c4e6192bb5ed3868c038, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  payable: 1
   cost: 1
+  costIndicator: {fileID: 1000014234286862, guid: f78e2c9f8c7bb4e739952122377b47d2,
+    type: 2}
+  costIndicators: []
+  showCost: 1
+  playerPaying: 0
+  amountPaid: 0
 --- !u!114 &114000014072081852
 MonoBehaviour:
   m_ObjectHideFlags: 1

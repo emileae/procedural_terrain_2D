@@ -195,14 +195,16 @@ public class PlayerController : MonoBehaviour {
 		}
 	}
 
-	IEnumerator PassCoin ()
-	{
-		yield return new WaitForSeconds (0.3f);
-		if (payTarget) {
-			currency -= 1;
-			Payment paymentScript = payTarget.GetComponent<Payment> ();
-			bool paid = paymentScript.Pay ();
-		}
+	IEnumerator PassCoin (){
+		yield return new WaitForSeconds (0.2f);
+		currency -= 1;
+
+		PayTarget paymentScript = payTarget.GetComponent<PayTarget> ();
+		bool paid = paymentScript.Pay ();
+
+			// before statemachine
+//			Payment paymentScript = payTarget.GetComponent<Payment> ();
+//			bool paid = paymentScript.Pay ();
 		passingCurrency = false;
 	}
 

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Foundation : MonoBehaviour {
 
+	public int foundationType = 0;
 	
 
 	// Use this for initialization
@@ -19,6 +20,8 @@ public class Foundation : MonoBehaviour {
 	{
 		if (col.CompareTag ("Resource")) {
 			Debug.Log ("Resource over the foundation...");
+			NPCInstructions instructions = col.gameObject.GetComponent<NPCInstructions>();
+			instructions.foundationType = foundationType;
 		}
 		if (col.CompareTag ("Player")) {
 			Debug.Log ("Player over the foundation...");
@@ -33,6 +36,8 @@ public class Foundation : MonoBehaviour {
 	{
 		if (col.CompareTag ("Resource")) {
 			Debug.Log("This is a resource, so indicate that its leaving a foundation");
+			NPCInstructions instructions = col.gameObject.GetComponent<NPCInstructions>();
+			instructions.ResetFoundationType();
 		}
 	}
 

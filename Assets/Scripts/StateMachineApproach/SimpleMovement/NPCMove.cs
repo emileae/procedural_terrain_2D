@@ -49,6 +49,7 @@ public class NPCMove : MonoBehaviour {
 	void OnTriggerEnter2D (Collider2D col)
 	{
 		if (col.CompareTag ("Edge")) {
+			Debug.Log("NPC triggered edge...");
 			direction *= -1;
 		}
 	}

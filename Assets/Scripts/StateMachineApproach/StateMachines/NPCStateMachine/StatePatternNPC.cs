@@ -6,9 +6,14 @@ public class StatePatternNPC : MonoBehaviour {
 
 	public Board blackboard;
 
+	public bool toIdle = false;
+
+	public bool busy = false;
+
 	public Transform target;
 	public NPCMove moveController;
 	public bool arrived = false;
+	public int platform = 0;// the platform NPC is standing on
 
 	[HideInInspector] public INPCState currentState;
 	[HideInInspector] public IdleState idleState;
@@ -54,14 +59,31 @@ public class StatePatternNPC : MonoBehaviour {
 		target = null;
 	}
 
-	public void PlayProcessAnimation (int processType){
-		Debug.Log ("Play the necessary animations for type: " + processType);
+	public void PlayProcessAnimation (int resourceType){
+		Debug.Log ("Play the necessary animations for type: " + resourceType);
 	}
 
-	public void CreateProcessedResource (int processType){
-		Debug.Log ("Instantiate a package for type: " + processType);
-		GameObject prefab = blackboard.GetProcessedPrefab(processType);
+	public void CreateProcessedResource (int resourceType){
+		Debug.Log ("Instantiate a package for type: " + resourceType);
+		GameObject prefab = blackboard.GetProcessedPrefab(resourceType);
 		Instantiate(prefab, target.position, Quaternion.identity);
+	}
+
+	public void Build(int targetType, int foundationType){
+		Debug.Log ("Play the necessary animations for building: ");
+		Debug.Log ("Building for type: " + targetType + " and foundation: " + foundationType);
+		GameObject prefab = blackboard.GetBuildingPrefab(targetType, foundationType, platform);
+		StartCoroutine(BuildStructure(prefab));
+	}
+
+	IEnumerator BuildStructure(GameObject prefab){
+		yield return new WaitForSeconds(prefab.GetComponent<Structure>().buildTime);
+		GameObject instantiatedPrefab = Instantiate(prefab, target.position, Quaternion.identity) as GameObject;// cast it as a gameobject... otherwise seems to be trnasform.position bugs
+		Debug.Log("Structure located at: " + instantiatedPrefab.transform.position);
+		toIdle = true;
+		// activate the structure's functionality
+		Structure structureScript = instantiatedPrefab.GetComponent<Structure>();
+		structureScript.Activate();
 	}
 
 }

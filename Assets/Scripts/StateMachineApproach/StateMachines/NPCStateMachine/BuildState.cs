@@ -5,19 +5,31 @@ public class BuildState : INPCState {
 
 	private readonly StatePatternNPC npc;
 
+	private bool building = false;
+	private NPCInstructions instructions;
+
 	public BuildState (StatePatternNPC statePatternNPC)
 	{
 		npc = statePatternNPC;
 	}
 
-	public void UpdateState (){
-		Debug.Log("Building");
+	public void UpdateState ()
+	{
+		npc.busy = true;
+		if (!building) {
+			Build ();
+		}
+
+		if (npc.toIdle) {
+			ToIdleState();
+		}
 	}
 
 	public void OnTriggerEnter2D(Collider2D col){
 	}
 
 	public void ToIdleState(){
+		npc.currentState = npc.idleState;
 	}
 
 	public void ToGoState(){
@@ -36,5 +48,11 @@ public class BuildState : INPCState {
 	}
 
 	public void ToOffloadState(){
+	}
+
+	void Build(){
+		building = true;
+		instructions = npc.target.GetComponent<NPCInstructions>();
+		npc.Build(instructions.resourceType, instructions.foundationType);
 	}
 }

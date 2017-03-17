@@ -14,6 +14,7 @@ public class GoState : INPCState {
 
 	public void UpdateState ()
 	{
+		npc.busy = true;
 		if (!npc.arrived) {
 			FindDirection ();
 		}

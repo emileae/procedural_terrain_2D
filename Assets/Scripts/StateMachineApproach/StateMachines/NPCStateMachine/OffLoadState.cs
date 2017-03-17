@@ -12,6 +12,7 @@ public class OffLoadState : INPCState {
 
 	public void UpdateState (){
 		Debug.Log("Offloading");
+		OffloadFish();
 	}
 
 	public void OnTriggerEnter2D(Collider2D col){
@@ -36,5 +37,9 @@ public class OffLoadState : INPCState {
 	}
 
 	public void ToOffloadState(){
+	}
+
+	void OffloadFish(){
+		Debug.Log("Offload fish");
 	}
 }
